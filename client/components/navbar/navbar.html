@@ -1,0 +1,30 @@
+<div class="navbar navbar-light bg-light navbar-static-top navbar-expand-md"
+ng-controller="NavbarController">
+    <div class="container">
+        <button class="navbar-toggler" type="button" ng-click="nav.isCollapsed = !nav.isCollapsed"> <span class="sr-only">Toggle navigation</span>
+&#x2630;</button> <a href="/"
+        class="navbar-brand">workspace</a>
+        <div uib-collapse="nav.isCollapsed" class="navbar-collapse collapse"
+        id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li ng-repeat="item in nav.menu" ui-sref-active="active" class="nav-item"> <a ui-sref="{{item.state}}" class="nav-link">{{item.title}}</a>
+                </li>
+                <li ng-show="nav.isAdmin()" ui-sref-active="active" class="nav-item"><a ui-sref="admin" class="nav-link">Admin</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav ml-auto">
+                <li ng-hide="nav.isLoggedIn()" ui-sref-active="active" class="nav-item"><a ui-sref="signup" class="nav-link">Sign up</a>
+                </li>
+                <li ng-hide="nav.isLoggedIn()" ui-sref-active="active" class="nav-item"><a ui-sref="login" class="nav-link">Login</a>
+                </li>
+                <li ng-show="nav.isLoggedIn()" class="nav-item">
+                    <p class="navbar-text">Hello {{ nav.getCurrentUser().name }}</p>
+                </li>
+                <li ng-show="nav.isLoggedIn()" ui-sref-active="active" class="nav-item"><a ui-sref="settings" class="nav-link"><span class="glyphicon glyphicon-cog"></span></a>
+                </li>
+                <li ng-show="nav.isLoggedIn()" class="nav-item"><a ui-sref="logout" class="nav-link">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

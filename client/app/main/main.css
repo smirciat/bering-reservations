@@ -1,0 +1,25 @@
+.navbar-text {
+  margin-left: 15px;
+}
+.nogap > .col{ 
+  padding-left:0px; 
+  padding-right: 0px;
+  border-right:2px solid;
+}
+.nogap > .col:first-child{ 
+  padding-left: 7.5px; 
+  
+}
+.nogap > .col:last-child{ 
+  padding-right: 7.5px; 
+  
+}
+.nogap > .col:nth-child(odd){
+  border-left:4px solid;
+}
+.name-input{
+  width:65% !important;
+}
+.village-input{
+  width:15% !important;
+}
