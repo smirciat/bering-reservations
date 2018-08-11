@@ -1,17 +1,22 @@
 <div class="row nogap" ng-repeat="row in main.twelve">
-    <div class="col" ng-repeat="col in main.seven">
-        <div class="input-group">
-            <input class="form-control name-input" type="text" ng-model="main.data.name[col+','+row]"
-                ng-change="main.update(col+','+row)" ng-focus="main.newFocus('name',col,row)"
-                id="{{col+','+row}}">
-            <input class="form-control village-input" type="text" ng-model="main.data.village[col+','+row]"
-                ng-change="main.update(col+','+row)" ng-focus="main.newFocus('village',col,row)"
-                id="{{'village,'+col+','+row}}"> 
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-secondary" ng-click="main.click()">
-                    <i class="fas fa-caret-down"></i>
-                </button>
-            </span>
-        </div>
+  <div class="col" ng-repeat="col in main.seven">
+    <div class="input-group">
+      <input class="form-control name-input" type="text" ng-model="main.data.name[col+','+row]"
+        ng-change="main.update(col+','+row)" ng-focus="main.newFocus('name',col,row)"
+        id="{{col+','+row}}">
+      <input class="form-control village-input" type="text" ng-model="main.data.village[col+','+row]"
+        ng-change="main.update(col+','+row)" ng-focus="main.newFocus('village',col,row)"
+        id="{{'village,'+col+','+row}}"> 
+      <div uib-dropdown>
+        <button type="button" uib-dropdown-toggle class="btn btn-secondary">
+          
+        </button>
+        <ul uib-dropdown-menu class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuButton">
+          <li role="menuitem"><a href="#">Action</a></li>
+          <li role="menuitem"><a href="#">Another action</a></li>
+          <li role="menuitem"><a href="#">Something else here</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
 </div>
