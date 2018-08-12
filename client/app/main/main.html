@@ -1,5 +1,5 @@
-<div class="row nogap" ng-repeat="row in main.twelve">
-  <div class="col" ng-repeat="col in main.seven">
+<div class="row nogap" ng-repeat="row in main.rows">
+  <div class="col" ng-repeat="col in main.cols">
     <div class="input-group">
       <input class="form-control name-input" type="text" ng-model="main.data.name[col+','+row]"
         ng-change="main.update(col+','+row)" ng-focus="main.newFocus('name',col,row)"
@@ -7,15 +7,25 @@
       <input class="form-control village-input" type="text" ng-model="main.data.village[col+','+row]"
         ng-change="main.update(col+','+row)" ng-focus="main.newFocus('village',col,row)"
         id="{{'village,'+col+','+row}}"> 
-      <div uib-dropdown>
-        <button type="button" uib-dropdown-toggle class="btn btn-secondary">
-          
-        </button>
-        <ul uib-dropdown-menu class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuButton">
-          <li role="menuitem"><a href="#">Action</a></li>
-          <li role="menuitem"><a href="#">Another action</a></li>
-          <li role="menuitem"><a href="#">Something else here</a></li>
-        </ul>
+      <div uib-dropdown auto-close="outsideClick" is-open="main.isOpen[col+','+row]" ng-class="main.bottomFour(row)">
+        <button type="button" uib-dropdown-toggle class="btn btn-secondary"></button>
+        <form style="right: 0; left: auto;" uib-dropdown-menu role="menu" class="dropdown-menu p-1">
+          <div role="menuitem" class="form-group">
+            <label for="exampleDropdownFormEmail2">Email address</label>
+            <input type="email" class="form-control" placeholder="email@example.com">
+          </div>
+          <div role="menuitem" class="form-group">
+            <label for="exampleDropdownFormPassword2">Password</label>
+            <input type="password" class="form-control" placeholder="Password">
+          </div>
+          <div role="menuitem" class="form-check">
+            <input type="checkbox" class="form-check-input">
+            <label class="form-check-label" for="dropdownCheck2">
+              Remember me
+            </label>
+          </div>
+          <button role="menuitem" type="submit" class="btn btn-primary">Sign in</button>
+        </form>
       </div>
     </div>
   </div>
