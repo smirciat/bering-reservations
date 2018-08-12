@@ -18,8 +18,69 @@
   border-left:4px solid;
 }
 .name-input{
+  height:1.5em;
+  padding-left:5px;
   width:65% !important;
+  padding-top: 0.1em; 
+  padding-bottom: 0.1em;
 }
 .village-input{
+  height:1.5em;
+  padding-left:5px;
   width:15% !important;
+  padding-top: 0.1em; 
+  padding-bottom: 0.1em;
+}
+.my-dropdown{
+  height:1.5em;
+  padding-top: 0.1em; 
+  padding-bottom: 0.1em;
+  border-style:solid !important;
+}
+.double-line {
+    border-bottom: 4px double #333;
+}
+.inter-village{
+  text-align:right;
+}
+.top-label{
+  font-size:80%; 
+  margin-top: 0.1em; 
+  margin-bottom: 0.1em;
+}
+.other-label{
+  font-weight:bold; 
+  margin-top: 0.1em; 
+  margin-bottom: 0.1em;
+  
+}
+.my-dropdown{
+  height:1.5em;
+  padding-top: 0.1em; 
+  padding-bottom: 0.1em;
+  border-style:solid !important;
+}
+.input-focus{
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1) !important;
+  border: 1px solid rgba(81, 203, 238, 1) !important;
+}
+@media print{
+  @page {size: landscape}
+  .my-page{
+    width:13in;
+    height:7.5in;
+  }
+  .name-input{
+    font-size:90%;
+  }
+  .village-input{
+    font-size:90%;
+  }
+  .my-dropdown{
+    display:none !important;
+  }
+  .input-focus{
+   box-shadow:none;
+   border-style:none;
+  }
 }
