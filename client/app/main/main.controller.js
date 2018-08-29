@@ -9,6 +9,7 @@
       this.socket = socket;
       this.window=$window;
       this.timeout=$timeout;
+      this.appConfig=appConfig;
       this.awesomeThings = [];
       this.data={};
       this.data={'2,1':{name:'Passenger Name',village:'OTZ',phone:'907-555-1212',
@@ -18,47 +19,10 @@
         this.rows.push(i);
       }
       this.cols=[];
-      for (var i=1;i<=7;i++) {
-        this.cols.push(i);
-        this.data[i+',33']={};
-        this.data[i+',33'].name='INTER VILLAGE';
-      }
-      this.flights={};
-      this.flights.one=[];
-      var index=0;
-      var outbound=true;
-      for (var i=1;i<=7;i++) {
-        if (outbound) {
-          if (appConfig.flights[index].outbound){
-            this.flights.one[i]={};
-            this.flights.one[i].times="Off Time " + appConfig.flights[index].off + 
-                " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 \u00A0\u00A0 On " + appConfig.flights[index].on;
-            this.flights.one[i].route = appConfig.flights[index].number + " " + appConfig.flights[index].routing;
-            this.flights.one[i].label="OUTBOUND";
-          }
-          else {
-            i--;//there is no outbound leg for this flight, do not take up a colum with it
-          }
-          outbound=false;
-        }
-        else {
-          if (appConfig.flights[index].inbound){
-            this.flights.one[i]={};
-            this.flights.one[i].times="Off Time " + appConfig.flights[index].off + 
-                " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  On " + appConfig.flights[index].on;
-            this.flights.one[i].route = appConfig.flights[index].number + " " + appConfig.flights[index].routing;
-            this.flights.one[i].label="INBOUND";
-          }
-          else {
-            i--;//there is no inbound leg for this flight, do not take up a colum with it
-          }
-          index++;
-          outbound=true;
-        }
-      }
       this.isOpen={};
       this.col=1;
       this.row=1;
+      
       this.keys = [];
       this.keys.push({ code: 38, action: ()=> { this.row--; this.updateFocus(); }});
       this.keys.push({ code: 40, action: ()=> { this.row++; this.updateFocus(); }});
@@ -78,10 +42,12 @@
     }
 
     $onInit() {
+      this.setFlights();
       this.$http.get('/api/things')
         .then(response => {
           this.awesomeThings = response.data;
           this.socket.syncUpdates('thing', this.awesomeThings);
+          
         });
     }
 
@@ -154,6 +120,55 @@
     amIFocused(col,row){
       if (col===this.col&&row===this.row) return "input-focus";
       return;
+    }
+    
+    setFlights(){
+      var index=0;
+      var numCols=7;
+      for (var i=1;i<=numCols;i++) {
+        this.cols.push(i);
+        this.data[i+',33']={};
+        this.data[i+',33'].name='INTER VILLAGE';
+      }
+      this.flights={};
+      this.flights.one=[];
+      var outbound=true;
+      for (var i=1;i<=numCols;i++) {
+        if (outbound) {
+          if (this.appConfig.flights[index].outbound){
+            this.flights.one[i]={};
+            this.flights.one[i].times="Off Time " + this.appConfig.flights[index].off + 
+                " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 \u00A0\u00A0 On " + this.appConfig.flights[index].on;
+            this.flights.one[i].route = this.appConfig.flights[index].number + " " + this.appConfig.flights[index].routing;
+            this.flights.one[i].label="OUTBOUND";
+          }
+          else {
+            i--;//there is no outbound leg for this flight, do not take up a colum with it
+          }
+          outbound=false;
+        }
+        else {
+          if (this.appConfig.flights[index].inbound){
+            var arr=this.appConfig.flights[index].routing.split('-');
+            arr.reverse();
+            var route="";
+            for (var j=0;j<arr.length;j++){
+              route+=arr[j]+'-';
+            }
+            route=route.substring(0,route.length-1);
+            this.flights.one[i]={};
+            this.flights.one[i].times="Off Time " + this.appConfig.flights[index].off + 
+                " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  On " + this.appConfig.flights[index].on;
+            this.flights.one[i].route = this.appConfig.flights[index].number + " " + route;
+            this.flights.one[i].label="INBOUND";
+          }
+          else {
+            i--;//there is no inbound leg for this flight, do not take up a colum with it
+          }
+          index++;
+          outbound=true;
+        }
+      }
     }
   }
 

@@ -3,7 +3,7 @@ ng-controller="NavbarController">
     <div class="container">
         <button class="navbar-toggler" type="button" ng-click="nav.isCollapsed = !nav.isCollapsed"> <span class="sr-only">Toggle navigation</span>
 &#x2630;</button> <a href="/"
-        class="navbar-brand">workspace</a>
+        class="navbar-brand">.</a>
         <div uib-collapse="nav.isCollapsed" class="navbar-collapse collapse"
         id="navbar-main">
             <ul class="nav navbar-nav">
@@ -11,6 +11,20 @@ ng-controller="NavbarController">
                 </li>
                 <li ng-show="nav.isAdmin()" ui-sref-active="active" class="nav-item"><a ui-sref="admin" class="nav-link">Admin</a>
                 </li>
+            </ul>
+            <ul ng-if="nav.isRoute('')" class="nav nav-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Morning 1</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Morning 2</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Afternoon 1</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#">Afternoon 2</a>
+              </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
                 <li ng-hide="nav.isLoggedIn()" ui-sref-active="active" class="nav-item"><a ui-sref="signup" class="nav-link">Sign up</a>

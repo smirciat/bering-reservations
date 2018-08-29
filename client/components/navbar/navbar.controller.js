@@ -10,10 +10,15 @@ class NavbarController {
   isCollapsed = true;
   //end-non-standard
 
-  constructor(Auth) {
+  constructor(Auth,$location) {
     this.isLoggedIn = Auth.isLoggedIn;
     this.isAdmin = Auth.isAdmin;
     this.getCurrentUser = Auth.getCurrentUser;
+    this.$location=$location;
+  }
+  
+  isRoute = function(route){
+    return this.$location.path()===('/' + route);
   }
 
 }
