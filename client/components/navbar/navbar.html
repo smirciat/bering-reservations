@@ -1,29 +1,29 @@
 <div class="navbar navbar-light bg-light navbar-static-top navbar-expand-md"
 ng-controller="NavbarController">
     <div class="container">
-        <button class="navbar-toggler" type="button" ng-click="nav.isCollapsed = !nav.isCollapsed"> <span class="sr-only">Toggle navigation</span>
-&#x2630;</button> <a href="/"
-        class="navbar-brand">.</a>
-        <div uib-collapse="nav.isCollapsed" class="navbar-collapse collapse"
-        id="navbar-main">
+        <button class="navbar-toggler" type="button" ng-click="nav.isCollapsed = !nav.isCollapsed"> 
+          <span class="sr-only">Toggle navigation</span>
+&#x2630;</button> 
+        <a href="/" class="navbar-brand">{{nav.currDate | date:'MM/dd/yyyy'}}</a>
+        <div uib-collapse="nav.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
                 <li ng-repeat="item in nav.menu" ui-sref-active="active" class="nav-item"> <a ui-sref="{{item.state}}" class="nav-link">{{item.title}}</a>
                 </li>
                 <li ng-show="nav.isAdmin()" ui-sref-active="active" class="nav-item"><a ui-sref="admin" class="nav-link">Admin</a>
                 </li>
             </ul>
-            <ul ng-if="nav.isRoute('')" class="nav nav-tabs">
+            <ul ng-if="nav.isRoute('')" style="margin-left:10px; margin-right:10px;" class="nav nav-tabs">
               <li class="nav-item">
-                <a class="nav-link active" href="#">Morning 1</a>
+                <a id="tab1" class="nav-link active" ng-click="nav.clickTab(1)">Morning 1</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Morning 2</a>
+                <a id="tab2" class="nav-link" ng-click="nav.clickTab(2)">Morning 2</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Afternoon 1</a>
+                <a id="tab3" class="nav-link" ng-click="nav.clickTab(3)">Afternoon 1</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link disabled" href="#">Afternoon 2</a>
+                <a id="tab4" class="nav-link disabled" ng-click="nav.clickTab(4)">Afternoon 2</a>
               </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
