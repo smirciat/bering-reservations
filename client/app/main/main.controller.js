@@ -4,17 +4,20 @@
 
   class MainController {
 
-    constructor($http, $scope, socket,$timeout,$window,appConfig) {
+    constructor($http, $scope, socket,$timeout,$window,appConfig,moment) {
       this.$http = $http;
       this.socket = socket;
       this.scope=$scope;
       this.window=$window;
       this.timeout=$timeout;
       this.appConfig=appConfig;
+      this.flights=[];
+      this.moment=moment;
       this.awesomeThings = [];
       this.date=new Date();
       this.isDatepickerOpen=false;
       this.datePickerOptions={};
+      this.currentTab=1;
       this.data={};
       this.data={'2,1':{name:'Passenger Name',village:'OTZ',phone:'907-555-1212',
           weight:199,email:'test@example.com',comment:'comment',ticket:'ticket#'}};
@@ -47,7 +50,7 @@
     }
 
     $onInit() {
-      this.setFlights();
+      this.upDate(this.date);
       this.$http.get('/api/things')
         .then(response => {
           this.awesomeThings = response.data;
@@ -127,23 +130,76 @@
       return;
     }
     
-    updateTab(index){
-      switch (index){
-        case 1: this.index=0;
-                this.numCols=7;
+    upDate(currDate){
+      this.weekday=this.moment(currDate).day();
+      switch(this.weekday){
+        case 0: this.flightList=this.appConfig.flights.filter((flight)=>{
+                                    return flight.sunday;
+                                  });
                 break;
-        case 2: this.index=4;
-                this.numCols=6;
+        case 6: this.flightList=this.appConfig.flights.filter((flight)=>{
+                                    return flight.saturday;
+                                  });
                 break;
-        case 3: this.index=10;
-                this.numCols=6;
-                break;
-        case 4: this.index=13;
-                this.numCols=7;
-                break;
-        default: this.index=0;
-                 this.numCols=7;
+        default: this.flightList=this.appConfig.flights.filter((flight)=>{
+                                    return flight.weekday;
+                                  }); 
       }
+      this.date=currDate;
+      this.currMoment=this.moment(currDate);
+      this.updateTab(this.currentTab);
+    }
+    
+    updateTab(index){
+      this.currentTab=index;
+      if (this.weekday>0&&this.weekday<6){
+        switch (index){
+          case 1: this.index=0;
+                  this.numCols=7;
+                  break;
+          case 2: this.index=4;
+                  this.numCols=6;
+                  break;
+          case 3: this.index=7;
+                  this.numCols=6;
+                  break;
+          case 4: this.index=10;
+                  this.numCols=7;
+                  break;
+          default: this.index=0;
+                   this.numCols=7;
+                   this.currentTab=1;
+        }
+      }
+      if (this.weekday===6){
+        switch (index){
+          case 1: this.index=0;
+                  break;
+          case 2: this.index=3;
+                  break;
+          case 3: this.index=6;
+                  break;
+          case 4: this.index=9;
+                  break;
+          default: this.index=0;
+                   this.currentTab=1;
+        }
+      }
+      if (this.weekday===0){
+        switch (index){
+          case 1: this.index=0;
+                  break;
+          case 2: this.index=0;
+                  break;
+          case 3: this.index=3;
+                  break;
+          case 4: this.index=3;
+                  break;
+          default: this.index=0;
+                   this.currentTab=1;
+        }
+      }
+      if (this.weekday===6||this.weekday===0) this.numCols=6;
       this.setFlights();
     }
     
@@ -160,11 +216,11 @@
       var outbound=true;
       for (var i=1;i<=this.numCols;i++) {
         if (outbound) {
-          if (this.appConfig.flights[this.index].outbound){
+          if (this.flightList[this.index].outbound){
             this.flights.one[i]={};
-            this.flights.one[i].times="Off Time " + this.appConfig.flights[this.index].off + 
-                " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 \u00A0\u00A0 On " + this.appConfig.flights[this.index].on;
-            this.flights.one[i].route = this.appConfig.flights[this.index].number + " " + this.appConfig.flights[this.index].routing;
+            this.flights.one[i].times="Off Time " + this.flightList[this.index].off + 
+                " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 \u00A0\u00A0 On " + this.flightList[this.index].on;
+            this.flights.one[i].route = this.flightList[this.index].number + " " + this.flightList[this.index].routing;
             this.flights.one[i].label="OUTBOUND";
           }
           else {
@@ -173,8 +229,8 @@
           outbound=false;
         }
         else {
-          if (this.appConfig.flights[this.index].inbound){
-            var arr=this.appConfig.flights[this.index].routing.split('-');
+          if (this.flightList[this.index].inbound){
+            var arr=this.flightList[this.index].routing.split('-');
             arr.reverse();
             var route="";
             for (var j=0;j<arr.length;j++){
@@ -182,9 +238,9 @@
             }
             route=route.substring(0,route.length-1);
             this.flights.one[i]={};
-            this.flights.one[i].times="Off Time " + this.appConfig.flights[this.index].off + 
-                " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  On " + this.appConfig.flights[this.index].on;
-            this.flights.one[i].route = this.appConfig.flights[this.index].number + " " + route;
+            this.flights.one[i].times="Off Time " + this.flightList[this.index].off + 
+                " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  On " + this.flightList[this.index].on;
+            this.flights.one[i].route = this.flightList[this.index].number + " " + route;
             this.flights.one[i].label="INBOUND";
           }
           else {

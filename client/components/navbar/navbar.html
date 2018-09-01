@@ -4,7 +4,7 @@ ng-controller="NavbarController">
         <button class="navbar-toggler" type="button" ng-click="nav.isCollapsed = !nav.isCollapsed"> 
           <span class="sr-only">Toggle navigation</span>
 &#x2630;</button> 
-        <a href="/" class="navbar-brand">{{nav.currDate | date:'MM/dd/yyyy'}}</a>
+        <a href="/" class="navbar-brand">.</a>
         <div uib-collapse="nav.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
                 <li ng-repeat="item in nav.menu" ui-sref-active="active" class="nav-item"> <a ui-sref="{{item.state}}" class="nav-link">{{item.title}}</a>
@@ -26,6 +26,7 @@ ng-controller="NavbarController">
                 <a id="tab4" class="nav-link disabled" ng-click="nav.clickTab(4)">Afternoon 2</a>
               </li>
             </ul>
+            <input ng-if="nav.isRoute('')" type="date" ng-model="nav.currDate" ng-change="nav.upDate()" />
             <ul class="nav navbar-nav ml-auto">
                 <li ng-hide="nav.isLoggedIn()" ui-sref-active="active" class="nav-item"><a ui-sref="signup" class="nav-link">Sign up</a>
                 </li>

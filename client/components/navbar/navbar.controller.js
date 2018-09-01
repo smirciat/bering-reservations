@@ -34,6 +34,10 @@ class NavbarController {
     angular.element(document.querySelector(tag)).addClass("active");
     this.scope.main.updateTab(index);
   }
+  
+  upDate = function(){
+    this.scope.main.upDate(this.currDate);
+  }
 
 }
 
