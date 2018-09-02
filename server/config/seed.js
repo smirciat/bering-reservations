@@ -7,6 +7,7 @@
 import sqldb from '../sqldb';
 var Thing = sqldb.Thing;
 var User = sqldb.User;
+var Reservation = sqldb.Reservation;
 
 Thing.sync()
   .then(() => {
@@ -40,6 +41,44 @@ Thing.sync()
       name: 'Deployment Ready',
       info: 'Easily deploy your app to Heroku or Openshift with the heroku ' +
              'and openshift subgenerators'
+    }]);
+  });
+  
+Reservation.sync()
+  .then(() => {
+    return Reservation.destroy({ where: {} });
+  })
+  .then(() => {
+    Reservation.bulkCreate([{
+      name: 'Development Tools',
+      date: new Date('9/1/2018'),
+      number: '621',
+      direction: 'inbound'
+    }, {
+      name: 'Server and Client integration',
+      date: new Date('9/1/2018'),
+      number: '621',
+      direction: 'inbound'
+    }, {
+      name: 'Smart Build System',
+      date: new Date('9/1/2018'),
+      number: '621',
+      direction: 'inbound'
+    }, {
+      name: 'Modular Structure',
+      date: new Date('9/1/2018'),
+      number: '621',
+      direction: 'inbound'
+    }, {
+      name: 'Optimized Build',
+      date: new Date('9/1/2018'),
+      number: '621',
+      direction: 'inbound'
+    }, {
+      name: 'Deployment Ready',
+      date: new Date('9/1/2018'),
+      number: '621',
+      direction: 'inbound'
     }]);
   });
 
