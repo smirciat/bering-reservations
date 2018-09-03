@@ -54,6 +54,7 @@
       });
       $scope.handleDragStart = function(e){
         constSelf.dragID=this.id.substring(4);
+        e.dataTransfer.setData('text', 'foo');
       };
       $scope.handleDragEnd = function(e){
       };
