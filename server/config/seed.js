@@ -51,6 +51,8 @@ Reservation.sync()
   .then(() => {
     Reservation.bulkCreate([{
       name: 'Development Tools',
+      village: 'UKN',
+      row:1,
       date: new Date('9/1/2018'),
       number: '621',
       direction: 'inbound'
@@ -58,26 +60,31 @@ Reservation.sync()
       name: 'Server and Client integration',
       date: new Date('9/1/2018'),
       number: '621',
+      row:2,
       direction: 'inbound'
     }, {
       name: 'Smart Build System',
       date: new Date('9/1/2018'),
       number: '621',
+      row:3,
       direction: 'inbound'
     }, {
       name: 'Modular Structure',
       date: new Date('9/1/2018'),
       number: '621',
+      row:4,
       direction: 'inbound'
     }, {
       name: 'Optimized Build',
       date: new Date('9/1/2018'),
       number: '621',
+      row:5,
       direction: 'inbound'
     }, {
       name: 'Deployment Ready',
       date: new Date('9/1/2018'),
       number: '621',
+      row:6,
       direction: 'inbound'
     }]);
   });

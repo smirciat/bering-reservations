@@ -64,6 +64,13 @@
   box-shadow: 0 0 5px rgba(81, 203, 238, 1) !important;
   border: 1px solid rgba(81, 203, 238, 1) !important;
 }
+  .purple{
+    color:purple !important;
+  }
+  .red{
+    font-weight: bold;
+    color:red !important;
+  }
 @media print{
   @page {size: landscape}
   .my-page{
@@ -83,4 +90,5 @@
    box-shadow:none;
    border-style:none;
   }
+  
 }

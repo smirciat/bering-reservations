@@ -74,7 +74,7 @@ export function getday(req, res) {
   var date = new Date(req.body.date); 
   date = new Date(date.getFullYear(),date.getMonth(),date.getDate(),0,0,0); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
-  options.date = {$gte:date,$lt:endDate};
+  options.date = {$gte:date,$lte:endDate};
   return Reservation.findAll({
       where: options//,order:[['WEIGHT','DESC']]
     })

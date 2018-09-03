@@ -17,7 +17,10 @@ export default function(sequelize, DataTypes) {
     direction: DataTypes.STRING,
     number: DataTypes.STRING,
     weight: DataTypes.INTEGER,
+    row: DataTypes.INTEGER,
     date: DataTypes.DATE,
+    reservedBy: DataTypes.STRING,
+    lastModifiedBy: DataTypes.STRING,
     active: DataTypes.BOOLEAN
   });
 }

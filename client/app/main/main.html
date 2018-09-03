@@ -12,36 +12,36 @@
       <div droppable="true" id="{{'drop' + col + ',' + row}}">
        <div draggable="true" id="{{'drag' + col + ',' + row}}">
         <div class="input-group">
-          <input ng-class="main.isInterVillage(row) + ' ' + main.amIFocused(col,row)" 
+          <input ng-class="main.isInterVillage(row) + ' ' + main.amIFocused(col,row) + ' ' + main.purple(col,row) + ' ' +main.red(col,row)"
             class="form-control name-input" type="text" ng-model="main.data[col+','+row].name"
-            ng-focus="main.newFocus('name',col,row)" 
+            ng-blur="main.setOldObj(col,row)" ng-focus="main.newFocus('name',col,row)" 
             id="{{col+','+row}}">
           <input class="form-control village-input" type="text" ng-model="main.data[col+','+row].village"
             ng-focus="main.newFocus('village',col,row)" ng-class="main.amIFocused(col,row)"
-            id="{{'village,'+col+','+row}}"> 
+            ng-blur="main.setOldObj(col,row)" id="{{'village,'+col+','+row}}"> 
           <div uib-dropdown auto-close="outsideClick" is-open="main.isOpen[col+','+row]" 
                 ng-class="main.bottomFour(row)" class="btn-group" ng-click="main.toggleDropdown(col,row)">
-            <button type="button" uib-dropdown-toggle class="btn btn-primary my-dropdown"></button>
+            <button ng-blur="main.setOldObj(col,row)" type="button" uib-dropdown-toggle class="btn btn-primary my-dropdown"></button>
             <form style="right: 0; left: auto;" uib-dropdown-menu role="menu" class="dropdown-menu p-1">
               <div role="menuitem" class="form-group">
                 <label>Weight</label>
-                <input ng-model="main.data[col+','+row].weight" type="number" min="0" step="1" class="form-control" placeholder="0">
+                <input ng-blur="main.setOldObj(col,row)" ng-model="main.data[col+','+row].weight" type="number" min="0" step="1" class="form-control" placeholder="0">
               </div>
               <div role="menuitem" class="form-group">
                 <label>Phone</label>
-                <input ng-model="main.data[col+','+row].phone" type="text" class="form-control" placeholder="Phone">
+                <input ng-blur="main.setOldObj(col,row)" ng-model="main.data[col+','+row].phone" type="text" class="form-control" placeholder="Phone">
               </div>
               <div role="menuitem" class="form-group">
                 <labe>Email address</label>
-                <input ng-model="main.data[col+','+row].email" type="email" class="form-control" placeholder="email@example.com">
+                <input ng-blur="main.setOldObj(col,row)" ng-model="main.data[col+','+row].email" type="email" class="form-control" placeholder="email@example.com">
               </div>
               <div role="menuitem" class="form-group">
                 <label>Ticket Number</label>
-                <input ng-model="main.data[col+','+row].ticket" type="text" class="form-control" placeholder="Ticket#">
+                <input ng-blur="main.setOldObj(col,row)" ng-model="main.data[col+','+row].ticket" type="text" class="form-control" placeholder="Ticket#">
               </div>
               <div role="menuitem" class="form-group">
                 <label>Comment</label>
-                <input ng-model="main.data[col+','+row].comment" type="text" class="form-control" placeholder="Comment">
+                <input ng-blur="main.setOldObj(col,row)" ng-model="main.data[col+','+row].comment" type="text" class="form-control" placeholder="Comment">
               </div>
             </form>
           </div>

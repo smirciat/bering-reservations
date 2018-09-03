@@ -20,7 +20,11 @@
       this.isDatepickerOpen=false;
       this.datePickerOptions={};
       this.currentTab=1;
+      this.timeoutInterval=0;
       this.data={};
+      this.oldObj={};
+      this.oldCol=-1;
+      this.oldRow=-1;
       this.data={'2,1':{name:'Passenger Name',village:'OTZ',phone:'907-555-1212',
           weight:199,email:'test@example.com',comment:'comment',ticket:'ticket#'}};
       this.rows=[];
@@ -42,9 +46,8 @@
         socket.unsyncUpdates('reservation');
       });
       $scope.$on('keydown', ( msg, obj )=> {
-        var code = obj.code;
         this.keys.forEach((o)=> {
-          if ( o.code !== code ) { return; }
+          if ( o.code !== obj.code ) return;
           o.action();
           $scope.$apply();
         });
@@ -64,6 +67,8 @@
           var temp=angular.copy(constSelf.data[drag]);
           constSelf.data[drag]=angular.copy(constSelf.data[drop]);
           constSelf.data[drop]=angular.copy(temp);
+          constSelf.updateRes(constSelf.data[drag],drag);
+          constSelf.updateRes(constSelf.data[drop],drop);
         }
         $scope.$apply();//important
       };
@@ -72,10 +77,9 @@
         e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
         return false;
       };
-      $scope.$watch('main.col',(newValue,oldValue)=>{
-      });
-      $scope.$watch('main.row',(newValue,oldValue)=>{
-        //console.log(oldValue)
+      $scope.$watchGroup(['main.col','main.row'],(newValues,oldValues)=>{
+        var address=this.oldCol+','+this.oldRow;
+        this.updateRes(this.oldObj,address);
       });
       
     }
@@ -88,6 +92,12 @@
           //this.awesomeThings = response.data;
           //this.socket.syncUpdates('thing', this.awesomeThings);
       //  });
+    }
+    
+    setOldObj(col,row){
+      this.oldObj=this.data[col+','+row];
+      this.oldCol=col;
+      this.oldRow=row;
     }
     
     newFocus(type,col,row){
@@ -139,6 +149,14 @@
       return;
     }
     
+    purple(col,row){
+      if (this.data[col+','+row]&&this.data[col+','+row].purple) return "purple";
+    }
+    
+    red(col,row){
+      if (this.data[col+','+row]&&this.data[col+','+row].red) return "red";
+    }
+    
     toggleDropdown(col,row){
       this.col=col;
       this.row=row;
@@ -150,6 +168,7 @@
     }
     
     upDate(currDate){
+      this.date=currDate;
       this.weekday=this.moment(currDate).day();
       switch(this.weekday){
         case 0: this.flightList=this.appConfig.flights.filter((flight)=>{
@@ -164,7 +183,6 @@
                                     return flight.weekday;
                                   }); 
       }
-      this.date=currDate;
       this.currMoment=this.moment(currDate);
       this.updateTab(this.currentTab);
     }
@@ -222,12 +240,19 @@
       this.setFlights();
     }
     
-    setFlights(){
-      this.date=new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate(),0,0,0); 
-      var obj={date:this.date};
-      this.http.post('/api/reservations/day', obj).then(response=>{
-        console.log(response.data)
+    findCol(number,direction){
+      var returnCol=-1;
+      this.colList.forEach((col,index)=>{
+        if (col.number===number&&col.direction===direction) returnCol=index;
       });
+      return returnCol;
+    }
+    
+    findNumber(col){
+      return this.colList[col];
+    }
+    
+    setFlights(){
       this.data={};
       this.cols=[];
       for (var i=1;i<=this.numCols;i++) {
@@ -276,6 +301,59 @@
           this.index++;
           outbound=true;
         }
+      }
+      this.date=new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate(),0,0,0); 
+      var obj={date:this.date};
+      this.http.post('/api/reservations/day', obj).then(response=>{
+        this.reservations=response.data.filter(res=>{
+          var answer=false;
+          this.colList.forEach(col=>{
+            if (col.direction===res.direction&&col.number===res.number) answer=true;
+          });
+          return answer;
+        });
+        this.reservations.forEach(res=>{
+          var col=this.findCol(res.number,res.direction);
+          this.data[col+','+res.row]=res;
+        });
+      });
+    }
+    
+    updateRes(obj,address){
+      if (typeof obj==="undefined") return;
+      var addrArray=address.split(',');
+      if (addrArray[0]==="-1"||addrArray[1]==="-1") return;
+      this.data[address].red=false;
+      this.data[address].purple=true;
+      obj.row=parseInt(addrArray[1],10);
+      obj.number=this.colList[addrArray[0]].number;
+      obj.direction=this.colList[addrArray[0]].direction;
+      obj.date=this.date;
+      if (obj._id) {
+        this.http.put('/api/reservations/'+obj._id,obj).then(response=>{
+          this.data[address].purple=false;
+          this.reservations.forEach(res=>{
+            if (res._id===response.data._id) {
+              res=response.data;
+            }
+          });
+        },err=>{
+          console.log(err);
+          this.data[address].purple=false;
+          this.data[address].red=true;
+        });
+      }
+      else {
+        this.http.post('/api/reservations',obj).then(response=>{
+          if (!this.data[address]) return;
+          this.data[address].purple=false;
+          this.data[address]._id=response.data._id;
+          this.reservations.push(response.data);
+        },err=>{
+          console.log(err);
+          this.data[address].purple=false;
+          this.data[address].red=true;
+        });
       }
     }
     
