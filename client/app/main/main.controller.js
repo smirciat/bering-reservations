@@ -6,6 +6,7 @@
 
     constructor($http, $scope, socket,$timeout,$window,appConfig,moment,Modal) {
       var constSelf=this;
+      //$http.get('/api/reservations').then(response=>{console.log(response.data)});
       this.http = $http;
       this.socket = socket;
       this.scope=$scope;
@@ -329,7 +330,10 @@
       this.date=new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate(),0,0,0); 
       var obj={date:this.date};
       this.http.post('/api/reservations/day', obj).then(response=>{
-        this.reservations=response.data.filter(res=>{
+        var arr=response.data.filter(res=>{
+          return res.name!==""&&res.row<=39;
+        });
+        this.reservations=arr.filter(res=>{
           var answer=false;
           this.colList.forEach(col=>{
             if (col.direction===res.direction&&col.number===res.number) answer=true;
@@ -348,16 +352,18 @@
               if (this.data[i+','+j]&&!this.data[i+','+j]._id&&this.data[i+','+j].name===item.name) this.data[i+','+j]={};
             }
           }
-          var valid=false;
-          this.colList.forEach(col=>{
-            if (col.direction===item.direction&&col.number===item.number&&this.currMoment.isSame(this.moment(item.date),'day')) valid=true;
-          });
-          if (valid){
-            var col=this.findCol(item.number,item.direction);
-            if (this.data[col+','+item.row]&&!this.data[col+','+item.row]._id){
-                this.copyToNextBlank(this.data[col+','+item.row],col,item.row);
+          if (event!=="deleted") {
+            var valid=false;
+            this.colList.forEach(col=>{
+              if (col.direction===item.direction&&col.number===item.number&&this.currMoment.isSame(this.moment(item.date),'day')) valid=true;
+            });
+            if (valid){
+              var col=this.findCol(item.number,item.direction);
+              if (this.data[col+','+item.row]&&!this.data[col+','+item.row]._id){
+                  this.copyToNextBlank(this.data[col+','+item.row],col,item.row);
+              }
+                this.data[col+','+item.row]=item;
             }
-              this.data[col+','+item.row]=item;
           }
         });
       });
@@ -369,18 +375,28 @@
       while (done===false){
         row++;
         address=col+','+row;
-        if (!this.data[col+','+row]){
+        if (!this.data[col+','+row]||typeof this.data[col+','+row]==="undefined"||this.data[col+','+row].name===null||this.data[col+','+row].name===""){
           obj.row=row;
           this.data[col+','+row]=obj;
           done=true;
-          this.timeout(()=>{this.updateRes(obj,address,true)},500);
+          //this.timeout(()=>{this.updateRes(obj,address,true)},500);
         }
       }
     }
     
+    delete(obj){
+      this.http.delete('/api/reservations/'+obj._id).then(response=>{});
+    }
+    
     updateRes(obj,address,inTable){
-      inTable=inTable||true;
       if (!obj||Object.keys(obj).length === 0||typeof obj==="undefined"||typeof this.data[address]==="undefined") return;
+      if (obj.name===null||obj.name===""){
+        this.data[address]={};
+        if (obj._id){
+          this.delete(obj);
+        }
+        return;
+      }
       var addrArray=address.split(',');
       if (addrArray[0]==="-1"||addrArray[1]==="-1") return;
       this.data[address].red=false;
@@ -394,20 +410,26 @@
       if (inTable) this.commit(obj,address);
       else{
         var params={date:obj.date};
+        obj.row=-1;
         this.http.post('/api/reservations/day', params).then(response=>{
           var reservations=response.data.filter(res=>{
-            return res.number===obj.number&&res.direction===obj.direction;
+            return res.number===obj.number&&res.direction===obj.direction&&res.name!==""&&res.row<=39;
           });
-          var tempRow=1;
-          reservations.forEach(res=>{
-            if (res.row>=tempRow) {
-              tempRow=res.row+1;
+          for (var i=1;i<=39;i++){
+            var exist=false;
+            reservations.forEach(res=>{
+              if (res.row===i) exist=true;
+            });
+            if (!exist) {
+              obj.row=i;
+              i=40;
             }
+          }
+          if (obj.row>0){
+            this.commit(obj,address);
+            this.data[address]={};
+          }
           });
-          obj.row=tempRow;
-          this.commit(obj,address);
-          this.data[address]={};
-        });
       }
     }
     
