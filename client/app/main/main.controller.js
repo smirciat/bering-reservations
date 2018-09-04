@@ -81,8 +81,8 @@
           var temp=angular.copy(constSelf.data[drag]);
           constSelf.data[drag]=angular.copy(constSelf.data[drop]);
           constSelf.data[drop]=angular.copy(temp);
-          constSelf.updateRes(constSelf.data[drag],drag);
-          constSelf.updateRes(constSelf.data[drop],drop);
+          constSelf.updateRes(constSelf.data[drag],drag,true);
+          constSelf.updateRes(constSelf.data[drop],drop,true);
         }
         $scope.$apply();//important
       };
@@ -379,6 +379,7 @@
     }
     
     updateRes(obj,address,inTable){
+      inTable=inTable||true;
       if (!obj||Object.keys(obj).length === 0||typeof obj==="undefined"||typeof this.data[address]==="undefined") return;
       var addrArray=address.split(',');
       if (addrArray[0]==="-1"||addrArray[1]==="-1") return;
