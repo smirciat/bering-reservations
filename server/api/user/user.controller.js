@@ -4,6 +4,15 @@ import {User} from '../../sqldb';
 import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
+var nodemailer = require('nodemailer');
+
+// create reusable transporter object using the default SMTP transport
+var transporter = nodemailer.createTransport({ 
+    host: 'smtp.gmail.com', 
+    port: 465, 
+    auth: { user: 'beringair.kotzebue@gmail.com', pass: process.env.GMAIL_PASS },
+    secure: true
+});
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
@@ -45,7 +54,7 @@ export function index(req, res) {
 export function create(req, res, next) {
   var newUser = User.build(req.body);
   newUser.setDataValue('provider', 'local');
-  newUser.setDataValue('role', 'user');
+  newUser.setDataValue('role', 'guest');
   return newUser.save()
     .then(function(user) {
       var token = jwt.sign({ _id: user._id }, config.secrets.session, {
@@ -54,6 +63,65 @@ export function create(req, res, next) {
       res.json({ token });
     })
     .catch(validationError(res));
+}
+
+export function adminChangeRole(req, res, next) {
+  var userId = req.body.user;
+  var newRole = req.body.role;
+
+  User.find({
+    where: {
+      _id: userId
+    }
+  })
+    .then(user => {
+      if (true) {
+        user.role = newRole;
+        return user.save()
+          .then(() => {
+            res.status(204).end();
+          })
+          .catch(validationError(res));
+      } else {
+        return res.status(403).end();
+      }
+    });
+}
+
+export function adminChangePassword(req, res, next) {
+  var userId = req.body.id;
+  var mailOptions = req.body.mailOptions;
+  var subjectUser = req.body.subjectUser;
+  var newPass=Math.random().toString(36).substr(2, 10);
+
+  User.find({
+    where: {
+      email: subjectUser.email
+    }
+  })
+    .then(user => {
+      if (user) {
+        user.password = newPass;
+        return user.save()
+          .then(() => {
+            mailOptions.from = '"Bering Air Kotzebue" <beringair.kotzebue@gmail.com>';
+            mailOptions.text = "A password reset has been requested for: " + user.email + ".  Your new password is " + newPass ;// plaintext body
+            transporter.sendMail(mailOptions, function(error, info){
+              if(error){
+                  handleError(res);
+                  return console.log(error);
+              }
+              console.log('Message sent: ' + info.response);
+              res.status(204).end();
+              return info.response;
+            });
+            
+          })
+          .catch(validationError(res));
+      } else {
+        return res.status(403).end();
+      }
+    });
 }
 
 /**

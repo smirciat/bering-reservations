@@ -12,6 +12,18 @@
           controller: 'password'
         }
       },
+      adminChangePassword: {
+        method: 'POST',
+        params: {
+          controller:'resetpassword'
+        }
+      },
+      adminChangeRole: {
+        method: 'PUT',
+        params: {
+          controller:'changerole'
+        }
+      },
       get: {
         method: 'GET',
         params: {

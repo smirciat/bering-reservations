@@ -4,7 +4,7 @@
 
   class MainController {
 
-    constructor($http, $scope, socket,$timeout,$window,appConfig,moment) {
+    constructor($http, $scope, socket,$timeout,$window,appConfig,moment,Modal) {
       var constSelf=this;
       this.http = $http;
       this.socket = socket;
@@ -37,6 +37,19 @@
       this.row=1;
       this.index=0;
       this.numCols=7;
+      this.quickMessage=Modal.confirm.quickMessage();
+      this.reschedule = Modal.confirm.enterData(formData =>{
+        if (!formData.number||!formData.date||formData.number===""||formData.date===null) {
+          this.quickMessage("Fail!  Try again and enter the new flight number and date");
+        }
+        else {
+          this.oldObj.number=formData.number;
+          this.oldObj.date=formData.date;
+          var address=this.oldCol+','+this.oldRow;
+          this.updateRes(this.oldObj,address,false);
+        }
+        
+      });
       this.keys = [];
       this.keys.push({ code: 38, action: ()=> { this.row--; this.updateFocus(); }});
       this.keys.push({ code: 40, action: ()=> { this.row++; this.updateFocus(); }});
@@ -80,7 +93,7 @@
       };
       $scope.$watchGroup(['main.col','main.row'],(newValues,oldValues)=>{
         var address=this.oldCol+','+this.oldRow;
-        this.updateRes(this.oldObj,address);
+        this.updateRes(this.oldObj,address,true);
       });
       
     }
@@ -105,6 +118,7 @@
       //do stuff with old this.col & row?
       this.col=col;
       this.row=row;
+      if (!this.data[col+','+row]) this.data[col+','+row]={};
     }
     
     updateFocus(){
@@ -135,7 +149,7 @@
     }
     
     bottomFour(row){
-      if (this.rows[this.rows.length-1]-row<10) return "dropup";
+      if (this.rows[this.rows.length-1]-row<16) return "dropup";
       else return;
     }
     
@@ -156,6 +170,15 @@
     
     red(col,row){
       if (this.data[col+','+row]&&this.data[col+','+row].red) return "red";
+    }
+    
+    orange(col,row){
+      if (this.data[col+','+row]&&this.data[col+','+row].canceled) return "orange";
+    }
+    
+    cancel(col,row){
+      this.data[col+','+row].canceled=!this.data[col+','+row].canceled;
+      
     }
     
     toggleDropdown(col,row){
@@ -317,19 +340,77 @@
           var col=this.findCol(res.number,res.direction);
           this.data[col+','+res.row]=res;
         });
+        this.socket.unsyncUpdates('reservation');
+        this.socket.syncUpdates('reservation', this.reservations, (event, item, array)=>{
+          for (var i=1;i<=this.numCols;i++) {
+            for (var j=1;j<=39;j++){
+              if (this.data[i+','+j]&&this.data[i+','+j]._id===item._id) this.data[i+','+j]={};
+              if (this.data[i+','+j]&&!this.data[i+','+j]._id&&this.data[i+','+j].name===item.name) this.data[i+','+j]={};
+            }
+          }
+          var valid=false;
+          this.colList.forEach(col=>{
+            if (col.direction===item.direction&&col.number===item.number&&this.currMoment.isSame(this.moment(item.date),'day')) valid=true;
+          });
+          if (valid){
+            var col=this.findCol(item.number,item.direction);
+            if (this.data[col+','+item.row]&&!this.data[col+','+item.row]._id){
+                this.copyToNextBlank(this.data[col+','+item.row],col,item.row);
+            }
+              this.data[col+','+item.row]=item;
+          }
+        });
       });
     }
     
-    updateRes(obj,address){
-      if (typeof obj==="undefined") return;
+    copyToNextBlank(obj,col,row){
+      var done=false;
+      var address;
+      while (done===false){
+        row++;
+        address=col+','+row;
+        if (!this.data[col+','+row]){
+          obj.row=row;
+          this.data[col+','+row]=obj;
+          done=true;
+          this.timeout(()=>{this.updateRes(obj,address,true)},500);
+        }
+      }
+    }
+    
+    updateRes(obj,address,inTable){
+      if (!obj||Object.keys(obj).length === 0||typeof obj==="undefined"||typeof this.data[address]==="undefined") return;
       var addrArray=address.split(',');
       if (addrArray[0]==="-1"||addrArray[1]==="-1") return;
       this.data[address].red=false;
       this.data[address].purple=true;
-      obj.row=parseInt(addrArray[1],10);
-      obj.number=this.colList[addrArray[0]].number;
+      if (inTable){
+        obj.number=this.colList[addrArray[0]].number;
+        obj.row=parseInt(addrArray[1],10);
+        obj.date=this.date;
+      }
       obj.direction=this.colList[addrArray[0]].direction;
-      obj.date=this.date;
+      if (inTable) this.commit(obj,address);
+      else{
+        var params={date:obj.date};
+        this.http.post('/api/reservations/day', params).then(response=>{
+          var reservations=response.data.filter(res=>{
+            return res.number===obj.number&&res.direction===obj.direction;
+          });
+          var tempRow=1;
+          reservations.forEach(res=>{
+            if (res.row>=tempRow) {
+              tempRow=res.row+1;
+            }
+          });
+          obj.row=tempRow;
+          this.commit(obj,address);
+          this.data[address]={};
+        });
+      }
+    }
+    
+    commit(obj,address){
       if (obj._id) {
         this.http.put('/api/reservations/'+obj._id,obj).then(response=>{
           this.data[address].purple=false;
@@ -357,7 +438,6 @@
         });
       }
     }
-    
     
   }
 

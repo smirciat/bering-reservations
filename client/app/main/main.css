@@ -71,6 +71,9 @@
     font-weight: bold;
     color:red !important;
   }
+  .orange{
+    color:orange !important;
+  }
 @media print{
   @page {size: landscape}
   .my-page{

@@ -35,7 +35,7 @@ ng-controller="NavbarController">
                 <li ng-show="nav.isLoggedIn()" class="nav-item">
                     <p class="navbar-text">Hello {{ nav.getCurrentUser().name }}</p>
                 </li>
-                <li ng-show="nav.isLoggedIn()" ui-sref-active="active" class="nav-item"><a ui-sref="settings" class="nav-link"><span class="glyphicon glyphicon-cog"></span></a>
+                <li ng-show="nav.isLoggedIn()" ui-sref-active="active" class="nav-item"><a ui-sref="settings" class="nav-link"><span><i class="fas fa-cog"></i></span></a>
                 </li>
                 <li ng-show="nav.isLoggedIn()" class="nav-item"><a ui-sref="logout" class="nav-link">Logout</a>
                 </li>

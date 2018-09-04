@@ -70,6 +70,22 @@
           })
           .$promise;
       },
+      
+      adminChangePassword(user,mailOptions,callback) {
+        if (!currentUser) currentUser={};
+        return User.adminChangePassword({subjectUser: user,mailOptions:mailOptions,id: currentUser._id}, function() {
+          return safeCb(callback)(null);
+        }, function(err) {
+          return safeCb(callback)(err);
+        }).$promise;
+      },
+      adminChangeRole(userId,role,callback) {
+        return User.adminChangeRole({ id: currentUser._id }, {user: userId,role:role}, function() {
+          return safeCb(callback)(null);
+        }, function(err) {
+          return safeCb(callback)(err);
+        }).$promise;
+      },
 
       /**
        * Change password

@@ -12,7 +12,7 @@
       <div droppable="true" id="{{'drop' + col + ',' + row}}">
        <div draggable="true" id="{{'drag' + col + ',' + row}}">
         <div class="input-group">
-          <input ng-class="main.isInterVillage(row) + ' ' + main.amIFocused(col,row) + ' ' + main.purple(col,row) + ' ' +main.red(col,row)"
+          <input ng-class="main.isInterVillage(row) + ' ' + main.amIFocused(col,row) + ' ' + main.purple(col,row) + ' ' + main.red(col,row) + ' ' + main.orange(col,row)"
             class="form-control name-input" type="text" ng-model="main.data[col+','+row].name"
             ng-blur="main.setOldObj(col,row)" ng-focus="main.newFocus('name',col,row)" 
             id="{{col+','+row}}">
@@ -42,6 +42,12 @@
               <div role="menuitem" class="form-group">
                 <label>Comment</label>
                 <input ng-blur="main.setOldObj(col,row)" ng-model="main.data[col+','+row].comment" type="text" class="form-control" placeholder="Comment">
+              </div>
+              <div role="menuitem" class="form-group">
+                <button ng-click="main.cancel(col,row)" class="btn btn-danger">Cancel/Restore</button>
+              </div>
+              <div role="menuitem" class="form-group">
+                <button ng-click="main.reschedule(col,row)" class="btn btn-warning">Reschedule</button>
               </div>
             </form>
           </div>
