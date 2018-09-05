@@ -9,6 +9,7 @@
       //$http.get('/api/reservations').then(response=>{console.log(response.data)});
       this.http = $http;
       this.getCurrentUser=Auth.getCurrentUser;
+      this.isUser=Auth.isUser;
       this.socket = socket;
       this.scope=$scope;
       this.window=$window;
@@ -102,7 +103,7 @@
 
     $onInit() {
       this.user=this.getCurrentUser();
-      this.upDate(this.date);
+      if (this.isUser()) this.upDate(this.date);
       //this.http.get('/api/reservations')
       //  .then(response => {
       //    console.log(response.data)
@@ -441,7 +442,8 @@
     
     commit(obj,address){
       if (obj._id) {
-        obj.lastModifiedBy=
+        obj.lastModifiedBy=this.user.name;
+        obj.modifiedDate=new Date();
         this.http.put('/api/reservations/'+obj._id,obj).then(response=>{
           this.data[address].purple=false;
           this.reservations.forEach(res=>{
@@ -456,6 +458,8 @@
         });
       }
       else {
+        obj.reservedBy=this.user.name;
+        obj.reservedDate=new Date();
         this.http.post('/api/reservations',obj).then(response=>{
           if (!this.data[address]) return;
           this.data[address].purple=false;

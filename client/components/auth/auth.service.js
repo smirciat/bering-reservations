@@ -187,6 +187,9 @@
       isAdmin() {
         return Auth.hasRole.apply(Auth, [].concat.apply(['admin'], arguments));
       },
+      isUser() {
+        return Auth.hasRole.apply(Auth, [].concat.apply(['user'], arguments));
+      },
 
       /**
        * Get auth token

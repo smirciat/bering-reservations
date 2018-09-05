@@ -1,5 +1,11 @@
 <navbar></navbar>
-<div class="my-page" print-section>
+<div ng-if="!main.isUser()" style="text-align:center">
+  <br><br>
+  <h1>Please Login to see reservations.</h1>
+  <h1>If you sign up for a new account, let Andy know to approve your login to see the reservations.</h1>
+  <h1>If you don't have an email address, use "your first name"@example.com</h1>
+</div>
+<div ng-if="main.isUser()" class="my-page" print-section>
   <div class="row nogap">
     <div style="text-align:center" class="col off-on" ng-repeat="col in main.cols">
       <div><p class="top-label">{{main.flights.one[col].times}}</p></div>
@@ -57,14 +63,3 @@
     </div>
   </div>
 </div>
-
-           <!-- <div style="padding-left:10px;width:85%" class="input-group">
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="main.isDatepickerOpen = !main.isDatepickerOpen">
-                  <i class="glyphicon glyphicon-calendar"></i>
-                </button>
-              </span>
-              <input type="text" class="form-control" uib-datepicker-popup="EEEE MMM d, yyyy" ng-model="main.date" ng-change="main.upDate()" 
-                 datepicker-options="main.datepickerOptions" ng-required="true" close-text="Close" 
-                 alt-input-formats="altInputFormats"/>
-            </div>-->
