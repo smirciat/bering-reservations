@@ -103,13 +103,9 @@
 
     $onInit() {
       this.user=this.getCurrentUser();
-      if (this.isUser()) this.upDate(this.date);
-      //this.http.get('/api/reservations')
-      //  .then(response => {
-      //    console.log(response.data)
-          //this.awesomeThings = response.data;
-          //this.socket.syncUpdates('thing', this.awesomeThings);
-      //  });
+      this.timeout(()=>{
+        if (this.isUser()) this.upDate(this.date);
+      },0);
     }
     
     reservedBy(col,row){
