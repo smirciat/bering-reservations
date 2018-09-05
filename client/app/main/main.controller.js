@@ -112,6 +112,11 @@
       //  });
     }
     
+    reservedBy(col,row){
+      if (this.data&&this.data[col+','+row]) return this.data[col+','+row].reservedBy;
+      return;
+    }
+    
     setOldObj(col,row){
       this.oldObj=this.data[col+','+row];
       this.oldCol=col;
