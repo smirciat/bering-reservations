@@ -4,10 +4,11 @@
 
   class MainController {
 
-    constructor($http, $scope, socket,$timeout,$window,appConfig,moment,Modal) {
+    constructor($http, $scope, socket,$timeout,$window,appConfig,moment,Modal,Auth) {
       var constSelf=this;
       //$http.get('/api/reservations').then(response=>{console.log(response.data)});
       this.http = $http;
+      this.getCurrentUser=Auth.getCurrentUser;
       this.socket = socket;
       this.scope=$scope;
       this.window=$window;
@@ -100,6 +101,7 @@
     }
 
     $onInit() {
+      this.user=this.getCurrentUser();
       this.upDate(this.date);
       //this.http.get('/api/reservations')
       //  .then(response => {
@@ -439,6 +441,7 @@
     
     commit(obj,address){
       if (obj._id) {
+        obj.lastModifiedBy=
         this.http.put('/api/reservations/'+obj._id,obj).then(response=>{
           this.data[address].purple=false;
           this.reservations.forEach(res=>{
