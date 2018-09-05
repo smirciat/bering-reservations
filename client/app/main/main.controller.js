@@ -264,6 +264,8 @@
       if (this.weekday===6||this.weekday===0) this.numCols=6;
       this.http.get('/api/things').then(res=>{
         this.setFlights();
+      },res=>{
+        this.setFlights();
       });
     }
     
