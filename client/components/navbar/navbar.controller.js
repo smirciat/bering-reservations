@@ -10,7 +10,7 @@ class NavbarController {
   isCollapsed = true;
   //end-non-standard
 
-  constructor(Auth,$location,$window,$timeout,$scope) {
+  constructor(Auth,$location,$window,$timeout,$scope,$state) {
     this.isLoggedIn = Auth.isLoggedIn;
     this.isAdmin = Auth.isAdmin;
     this.getCurrentUser = Auth.getCurrentUser;
@@ -18,6 +18,7 @@ class NavbarController {
     this.$window=$window;
     this.$timeout=$timeout;
     this.scope=$scope;
+    this.state=$state;
     this.currDate=new Date();
   }
   
@@ -26,6 +27,8 @@ class NavbarController {
   }
   
   clickTab = function(index){
+    var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
+    this.scope.main.updateRes(this.scope.main.oldObj,address,true);
     angular.element(document.querySelector("#tab1")).removeClass("active");
     angular.element(document.querySelector("#tab2")).removeClass("active");
     angular.element(document.querySelector("#tab3")).removeClass("active");
@@ -36,7 +39,15 @@ class NavbarController {
   }
   
   upDate = function(){
+    var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
+    this.scope.main.updateRes(this.scope.main.oldObj,address,true);
     this.scope.main.upDate(this.currDate);
+  }
+  
+  goto = function(sref){
+    var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
+    this.scope.main.updateRes(this.scope.main.oldObj,address,true);
+    this.state.go(sref);
   }
 
 }
