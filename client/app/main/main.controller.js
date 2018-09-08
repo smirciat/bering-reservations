@@ -28,6 +28,8 @@
       this.oldObj={};
       this.oldCol=-1;
       this.oldRow=-1;
+      this.morningTabs=2;
+      this.afternoonTabs=2;
       this.data={'2,1':{name:'Passenger Name',village:'OTZ',phone:'907-555-1212',
           weight:199,email:'test@example.com',comment:'comment',ticket:'ticket#'}};
       this.rows=[];
@@ -198,7 +200,11 @@
     
     upDate(currDate){
       this.date=currDate;
+      this.currMoment=this.moment(currDate);
       this.weekday=this.moment(currDate).day();
+      this.extras=this.appConfig.extras.filter(extra=>{
+        return this.moment(extra.date).isSame(this.currMoment,'day');
+      });
       switch(this.weekday){
         case 0: this.flightList=this.appConfig.flights.filter((flight)=>{
                                     return flight.sunday;
@@ -212,7 +218,21 @@
                                     return flight.weekday;
                                   }); 
       }
-      this.currMoment=this.moment(currDate);
+      var flights=angular.copy(this.flightList);
+      if (this.extras&&this.extras.length===1) this.extras[0].flights.forEach(extra=>{
+        flights.forEach(flight=>{
+          if (flight.number===extra.substring(1)) {
+            var i=-1;
+            this.flightList.forEach((f,index)=>{
+              if (f.number.slice(-3)===flight.number) i=index;
+            });
+            var tempFlight = angular.copy(flight);
+            tempFlight.number=extra;
+            this.flightList.splice(i+1,0,tempFlight);
+          }
+        });
+      });
+      console.log(this.flightList)
       this.updateTab(this.currentTab);
     }
     
@@ -266,6 +286,7 @@
         }
       }
       if (this.weekday===6||this.weekday===0) this.numCols=6;
+      this.setCols();
       this.http.get('/api/things').then(res=>{
         this.setFlights();
       },res=>{
@@ -285,7 +306,7 @@
       return this.colList[col];
     }
     
-    setFlights(){
+    setCols(){
       this.data={};
       this.cols=[];
       for (var i=1;i<=this.numCols;i++) {
@@ -336,6 +357,9 @@
         }
       }
       this.date=new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate(),0,0,0); 
+    }
+    
+    setFlights(){
       var obj={date:this.date};
       this.http.post('/api/reservations/day', obj).then(response=>{
         var arr=response.data.filter(res=>{

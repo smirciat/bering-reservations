@@ -13,17 +13,8 @@ ng-controller="NavbarController">
                 </li>
             </ul>
             <ul ng-if="nav.isRoute('')" style="margin-left:10px; margin-right:10px;" class="nav nav-tabs">
-              <li class="nav-item">
-                <a id="tab1" class="nav-link active" ng-click="nav.clickTab(1)">Morning 1</a>
-              </li>
-              <li class="nav-item">
-                <a id="tab2" class="nav-link" ng-click="nav.clickTab(2)">Morning 2</a>
-              </li>
-              <li class="nav-item">
-                <a id="tab3" class="nav-link" ng-click="nav.clickTab(3)">Afternoon 1</a>
-              </li>
-              <li class="nav-item">
-                <a id="tab4" class="nav-link disabled" ng-click="nav.clickTab(4)">Afternoon 2</a>
+              <li class="nav-item" ng-repeat="tab in nav.tabs">
+                <a class="nav-link" ng-class="tab.isActive" ng-click="nav.clickTab($index)">{{tab.title}}</a>
               </li>
             </ul>
             <input ng-if="nav.isRoute('')" type="date" ng-model="nav.currDate" ng-change="nav.upDate()" />
