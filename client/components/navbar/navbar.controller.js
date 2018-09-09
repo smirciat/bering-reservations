@@ -34,11 +34,11 @@ class NavbarController {
     });
     this.tabs=angular.copy(this.tabsStatic);
     this.tabs[0].isActive="";
-    this.tabs[active].isActive="active";
     if (morningCols>13) this.tabs.splice(2,0,{title:'Morning 3',isActive:'',morning:true});
     if (morningCols>19) this.tabs.splice(3,0,{title:'Morning 4',isActive:'',morning:true});
     if (afternoonCols>13) this.tabs.push({title:'Afternoon 3',isActive:'',morning:false});
     if (afternoonCols>19) this.tabs.push({title:'Afternoon 4',isActive:'',morning:false});
+    this.tabs[active].isActive="active";
     this.scope.main.tabs=angular.copy(this.tabs);
   }
   

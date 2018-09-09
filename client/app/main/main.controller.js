@@ -233,6 +233,23 @@
           }
         });
       });
+      var blankFlight=angular.copy(this.flightList[0]);
+      blankFlight.number='XXX';
+      blankFlight.off='';
+      blankFlight.on='';
+      blankFlight.routing='';
+      for (var i=0;i<this.flightList.length;i++){
+        if (!this.flightList[i].morning){
+          var modifier=0;
+          if (this.weekday>0&&this.weekday<6) modifier=1;
+          if ((i-modifier)%3===2) this.flightList.splice(i,0,blankFlight);
+          if ((i-modifier)%3===1) {
+            this.flightList.splice(i,0,blankFlight);
+            this.flightList.splice(i,0,blankFlight);
+          }
+          i=this.flightList.length;
+        }
+      }
       console.log(this.flightList)
       this.updateTab(this.currentTab);
     }
@@ -251,28 +268,37 @@
         }
       });
       if (this.scope.nav) this.scope.nav.updateTabs(morningCols,afternoonCols);
-      var remainingAM=morningCols;
-      var remainingPM=afternoonCols;
+      var remainingAM=Math.floor((morningCols+1)/2);
+      var remainingPM=Math.floor((afternoonCols+1)/2);
       var indexList=[0];
       var numColList=[0];
       var indexCount=0;
       this.tabs.forEach((tab,i)=>{
-        if (tab.morning&&remainingAM>0) indexList.push(indexCount);
-        if (!tab.morning&&remainingPM>0) indexList.push(indexCount);
         var count=3;
         if (this.weekday>0&&this.weekday<6&&i===0) count=4;
         if (this.weekday>0&&this.weekday<6&i===(this.tabs.length-1)) count=4;
+        if (tab.morning){
+          if (remainingAM>0) indexList.push(indexCount);
+          else {
+            indexList.push(-1);
+            indexCount-=count;
+          }
+        }
+        if (!tab.morning) {
+          if (remainingPM>0) indexList.push(indexCount);
+          else {
+            indexList.push(-1);
+            indexCount-=count;
+          }
+        }
         if (count===3) numColList.push(6);
         else numColList.push(7);
         indexCount+=count;
         if (tab.morning) remainingAM-=count;
         else remainingPM-=count;
       });
-      console.log(indexList)
-      console.log(numColList)
       this.index=indexList[this.currentTab];
       this.numCols=numColList[this.currentTab];
-      console.log(this.index + ' ' + this.numCols)
       this.setCols();
       this.http.get('/api/things').then(res=>{
         this.setFlights();
@@ -305,6 +331,7 @@
       this.flights.one=[];
       var outbound=true;
       this.colList=[];
+      if (this.index>=this.flightList.length||this.index<0) return;
       for (var i=1;i<=this.numCols;i++) {
         if (outbound) {
           if (this.flightList[this.index].outbound){
