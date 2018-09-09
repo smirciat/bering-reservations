@@ -20,28 +20,26 @@ class NavbarController {
     this.scope=$scope;
     this.state=$state;
     this.currDate=new Date();
-    this.tabs=[{title:'Morning 1',isActive:'active'},
-               {title:'Morning 2',isActive:''},
-               {title:'Afternoon 1',isActive:''},
-               {title:'Afternoon 2',isActive:''}];
+    this.tabsStatic=[{title:'Morning 1',isActive:'active',morning:true},
+               {title:'Morning 2',isActive:'',morning:true},
+               {title:'Afternoon 1',isActive:'',morning:false},
+               {title:'Afternoon 2',isActive:'',morning:false}];
+    this.tabs=angular.copy(this.tabsStatic);
   }
   
-  updateTabs=function(flights){
-    var morningCols=0;
-    var afternoonCols=0;
-    flights.forEach(flight=>{
-      if (flight.morning){
-        if (flight.inbound) morningCols++;
-        if (flight.outbound) morningCols++;
-      }else {
-        if (flight.inbound) afternoonCols++;
-        if (flight.outbound) afternoonCols++;
-      }
+  updateTabs=function(morningCols,afternoonCols){
+    var active=0;
+    this.tabs.forEach((tab,index)=>{
+      if (tab.isActive==="active") active=index;
     });
-    if (morningCols>13) this.tabs.splice(2,0,{title:'Morning 3',isActive:''});
-    if (morningCols>19) this.tabs.splice(3,0,{title:'Morning 4',isActive:''});
-    if (afternoonCols>13) this.tabs.push({title:'Afternoon 3',isActive:''});
-    if (afternoonCols>19) this.tabs.push({title:'Afternoon 4',isActive:''});
+    this.tabs=angular.copy(this.tabsStatic);
+    this.tabs[0].isActive="";
+    this.tabs[active].isActive="active";
+    if (morningCols>13) this.tabs.splice(2,0,{title:'Morning 3',isActive:'',morning:true});
+    if (morningCols>19) this.tabs.splice(3,0,{title:'Morning 4',isActive:'',morning:true});
+    if (afternoonCols>13) this.tabs.push({title:'Afternoon 3',isActive:'',morning:false});
+    if (afternoonCols>19) this.tabs.push({title:'Afternoon 4',isActive:'',morning:false});
+    this.scope.main.tabs=angular.copy(this.tabs);
   }
   
   isRoute = function(route){

@@ -16,6 +16,7 @@
       this.timeout=$timeout;
       this.appConfig=appConfig;
       this.flights=[];
+      this.tabs=[];
       this.moment=moment;
       this.awesomeThings = [];
       this.colList=[];
@@ -238,54 +239,40 @@
     
     updateTab(index){
       this.currentTab=index;
-      if (this.weekday>0&&this.weekday<6){
-        switch (index){
-          case 1: this.index=0;
-                  this.numCols=7;
-                  break;
-          case 2: this.index=4;
-                  this.numCols=6;
-                  break;
-          case 3: this.index=7;
-                  this.numCols=6;
-                  break;
-          case 4: this.index=10;
-                  this.numCols=7;
-                  break;
-          default: this.index=0;
-                   this.numCols=7;
-                   this.currentTab=1;
+      var morningCols=0;
+      var afternoonCols=0;
+      this.flightList.forEach(flight=>{
+        if (flight.morning){
+          if (flight.inbound) morningCols++;
+          if (flight.outbound) morningCols++;
+        }else {
+          if (flight.inbound) afternoonCols++;
+          if (flight.outbound) afternoonCols++;
         }
-      }
-      if (this.weekday===6){
-        switch (index){
-          case 1: this.index=0;
-                  break;
-          case 2: this.index=3;
-                  break;
-          case 3: this.index=6;
-                  break;
-          case 4: this.index=9;
-                  break;
-          default: this.index=0;
-                   this.currentTab=1;
-        }
-      }
-      if (this.weekday===0){
-        switch (index){
-          case 1: this.index=0;
-                  break;
-          case 2: this.index=0;
-                  break;
-          case 3: this.index=3;
-                  break;
-          case 4: this.index=3;
-                  break;
-          default: this.index=0;
-                   this.currentTab=1;
-        }
-      }
-      if (this.weekday===6||this.weekday===0) this.numCols=6;
+      });
+      if (this.scope.nav) this.scope.nav.updateTabs(morningCols,afternoonCols);
+      var remainingAM=morningCols;
+      var remainingPM=afternoonCols;
+      var indexList=[0];
+      var numColList=[0];
+      var indexCount=0;
+      this.tabs.forEach((tab,i)=>{
+        if (tab.morning&&remainingAM>0) indexList.push(indexCount);
+        if (!tab.morning&&remainingPM>0) indexList.push(indexCount);
+        var count=3;
+        if (this.weekday>0&&this.weekday<6&&i===0) count=4;
+        if (this.weekday>0&&this.weekday<6&i===(this.tabs.length-1)) count=4;
+        if (count===3) numColList.push(6);
+        else numColList.push(7);
+        indexCount+=count;
+        if (tab.morning) remainingAM-=count;
+        else remainingPM-=count;
+      });
+      console.log(indexList)
+      console.log(numColList)
+      this.index=indexList[this.currentTab];
+      this.numCols=numColList[this.currentTab];
+      console.log(this.index + ' ' + this.numCols)
       this.setCols();
       this.http.get('/api/things').then(res=>{
         this.setFlights();

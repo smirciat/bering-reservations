@@ -1,6 +1,21 @@
 .navbar-text {
   margin-left: 15px;
 }
+@media (min-width:1440px){
+  .container{
+    max-width:1400px;
+  }
+}
+@media (min-width:1640px){
+  .container{
+    max-width:1600px;
+  }
+}
+@media (min-width:2040px){
+  .container{
+    max-width:2000px;
+  }
+}
 .nogap > .col{ 
   padding-left:0px; 
   padding-right: 0px;
