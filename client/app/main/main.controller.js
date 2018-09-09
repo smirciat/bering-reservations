@@ -233,7 +233,7 @@
           }
         });
       });
-      var blankFlight=angular.copy(this.flightList[0]);
+      var blankFlight=angular.copy(this.flightList[1]);
       blankFlight.number='XXX';
       blankFlight.off='';
       blankFlight.on='';
