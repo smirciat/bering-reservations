@@ -9,3 +9,4 @@ dist
 npm-debug.log
 coverage
 dev.sqlite
+/client/app/app.constant.js
