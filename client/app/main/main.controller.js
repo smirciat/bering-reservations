@@ -486,7 +486,7 @@
     commit(obj,address){
       if (obj._id) {
         obj.lastModifiedBy=this.user.name;
-        obj.modifiedDate=new Date();
+        obj.dateModified=new Date();
         this.http.put('/api/reservations/'+obj._id,obj).then(response=>{
           this.data[address].purple=false;
           this.reservations.forEach(res=>{
@@ -502,7 +502,7 @@
       }
       else {
         obj.reservedBy=this.user.name;
-        obj.reservedDate=new Date();
+        obj.dateReserved=new Date();
         this.http.post('/api/reservations',obj).then(response=>{
           if (!this.data[address]) return;
           this.data[address].purple=false;
