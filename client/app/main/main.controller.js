@@ -57,10 +57,10 @@
         
       });
       this.keys = [];
-      this.keys.push({ code: 38, action: ()=> { this.row--; this.updateFocus(); }});
-      this.keys.push({ code: 40, action: ()=> { this.row++; this.updateFocus(); }});
-      this.keys.push({ code: 37, action: ()=> { this.col--; this.updateFocus(); }});
-      this.keys.push({ code: 39, action: ()=> { this.col++; this.updateFocus(); }});
+      this.keys.push({ code: 38, action: ()=> { this.oldRow=this.row; this.row--; this.updateFocus(); }});
+      this.keys.push({ code: 40, action: ()=> { this.oldRow=this.row; this.row++; this.updateFocus(); }});
+      this.keys.push({ code: 37, action: ()=> { this.oldCol=this.col; this.col--; this.updateFocus(); }});
+      this.keys.push({ code: 39, action: ()=> { this.oldCol=this.col; this.col++; this.updateFocus(); }});
       $scope.$on('$destroy', function() {
         socket.unsyncUpdates('reservation');
       });
@@ -98,8 +98,8 @@
         return false;
       };
       $scope.$watchGroup(['main.col','main.row'],(newValues,oldValues)=>{
-        var address=this.oldCol+','+this.oldRow;
-        this.updateRes(this.oldObj,address,true);
+        //var address=this.oldCol+','+this.oldRow;
+        //this.updateRes(this.oldObj,address,true);
       });
       
     }
@@ -120,6 +120,10 @@
       this.oldObj=this.data[col+','+row];
       this.oldCol=col;
       this.oldRow=row;
+      this.timeout(()=>{
+        var address=this.oldCol+','+this.oldRow;
+        this.updateRes(this.oldObj,address,true);
+      });
     }
     
     newFocus(type,col,row){
