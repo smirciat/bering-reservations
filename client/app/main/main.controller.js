@@ -259,6 +259,9 @@
     }
     
     updateTab(index){
+      this.socket.unsyncUpdates('reservation');
+      this.reservations=[];
+      this.data={};
       this.currentTab=index;
       var morningCols=0;
       var afternoonCols=0;
@@ -457,7 +460,7 @@
         obj.date=this.date;
       }
       obj.direction=this.colList[addrArray[0]].direction;
-      if (inTable) this.commit(obj,address);
+      if (inTable) this.commit(obj,address,true);
       else{
         var params={date:obj.date};
         obj.row=-1;
@@ -476,28 +479,37 @@
             }
           }
           if (obj.row>0){
-            this.commit(obj,address);
+            this.commit(obj,address,false);
             this.data[address]={};
           }
           });
       }
     }
     
-    commit(obj,address){
+    commit(obj,address,inTable){
       if (obj._id) {
-        obj.lastModifiedBy=this.user.name;
-        obj.dateModified=new Date();
-        this.http.put('/api/reservations/'+obj._id,obj).then(response=>{
-          this.data[address].purple=false;
-          this.reservations.forEach(res=>{
-            if (res._id===response.data._id) {
-              res=response.data;
-            }
-          });
-        },err=>{
-          console.log(err);
-          this.data[address].purple=false;
-          this.data[address].red=true;
+        var sameTable=false;
+        this.http.get('/api/reservations/'+obj._id).then(response=>{
+          var col = this.findCol(obj.number,obj.direction);
+          if (col>=0) sameTable=true;
+          //if (response.data.number===obj.number) sameTable=true;
+          //only do if not inTable or same table
+          if (!inTable||sameTable) {
+            obj.lastModifiedBy=this.user.name;
+            obj.dateModified=new Date();
+            this.http.put('/api/reservations/'+obj._id,obj).then(response=>{
+              if (this.data[address]) this.data[address].purple=false;
+              this.reservations.forEach(res=>{
+                if (res._id===response.data._id) {
+                  res=response.data;//perhaps not needed?
+                }
+              });
+            },err=>{
+              console.log(err);
+              this.data[address].purple=false;
+              this.data[address].red=true;
+            });
+          }
         });
       }
       else {
