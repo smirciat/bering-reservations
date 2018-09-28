@@ -262,6 +262,8 @@
       this.socket.unsyncUpdates('reservation');
       this.reservations=[];
       this.data={};
+      this.row=-1;
+      this.col=-1;
       this.currentTab=index;
       var morningCols=0;
       var afternoonCols=0;
@@ -399,25 +401,30 @@
         });
         this.socket.unsyncUpdates('reservation');
         this.socket.syncUpdates('reservation', this.reservations, (event, item, array)=>{
-          for (var i=1;i<=this.numCols;i++) {
-            for (var j=1;j<=39;j++){
-              if (this.data[i+','+j]&&this.data[i+','+j]._id===item._id) this.data[i+','+j]={};
-              if (this.data[i+','+j]&&!this.data[i+','+j]._id&&this.data[i+','+j].name===item.name) this.data[i+','+j]={};
-            }
-          }
-          if (event!=="deleted") {
-            var valid=false;
-            this.colList.forEach(col=>{
-              if (col.direction===item.direction&&col.number===item.number&&this.currMoment.isSame(this.moment(item.date),'day')) valid=true;
-            });
-            if (valid){
-              var col=this.findCol(item.number,item.direction);
-              if (this.data[col+','+item.row]&&!this.data[col+','+item.row]._id){
-                  this.copyToNextBlank(this.data[col+','+item.row],col,item.row);
+          this.timeout(()=>{
+            var col=this.findCol(item.number,item.direction);
+            for (var i=1;i<=this.numCols;i++) {
+              for (var j=1;j<=39;j++){
+                if (this.data[i+','+j]&&this.data[i+','+j]._id===item._id) this.data[i+','+j]={};
+                if (this.data[i+','+j]&&!this.data[i+','+j]._id&&this.data[i+','+j].name===item.name
+                    &&this.colList[i].number===item.number) {
+                      this.data[i+','+j]={};
+                    }
               }
-                this.data[col+','+item.row]=item;
             }
-          }
+            if (event!=="deleted") {
+              var valid=false;
+              this.colList.forEach(col=>{
+                if (col.direction===item.direction&&col.number===item.number&&this.currMoment.isSame(this.moment(item.date),'day')) valid=true;
+              });
+              if (valid){
+                if (this.data[col+','+item.row]&&!this.data[col+','+item.row]._id){
+                    this.copyToNextBlank(this.data[col+','+item.row],col,item.row);
+                }
+                  this.data[col+','+item.row]=item;
+              }
+            }
+          },0);
         });
       });
     }
@@ -488,11 +495,10 @@
     
     commit(obj,address,inTable){
       if (obj._id) {
-        var sameTable=false;
+        var sameTable=false;//change to false to re-enable same tab checking prior to update
         this.http.get('/api/reservations/'+obj._id).then(response=>{
           var col = this.findCol(obj.number,obj.direction);
           if (col>=0) sameTable=true;
-          //if (response.data.number===obj.number) sameTable=true;
           //only do if not inTable or same table
           if (!inTable||sameTable) {
             obj.lastModifiedBy=this.user.name;
@@ -510,6 +516,8 @@
               this.data[address].red=true;
             });
           }
+        },err=>{
+          console.log(err);
         });
       }
       else {
