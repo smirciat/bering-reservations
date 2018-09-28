@@ -1,0 +1,23 @@
+<navbar></navbar>
+<div class="container">
+    <table class="table table-striped table-responsive table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Row</th>
+                <th>Date</th>
+                <th>Number</th>
+                <th>Direction</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="reservation in orphans.filteredReservations">
+                <td>{{reservation.name}}</td>
+                <td>{{reservation.row}}</td>
+                <td>{{reservation.date | date:'yyyy-MM-dd'}}</td>
+                <td>{{reservation.number}}</td>
+                <td>{{reservation.direction}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
