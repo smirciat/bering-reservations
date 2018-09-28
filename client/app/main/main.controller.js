@@ -397,7 +397,11 @@
         });
         this.reservations.forEach(res=>{
           var col=this.findCol(res.number,res.direction);
-          this.data[col+','+res.row]=res;
+          if (this.data[col+','+res.row]&&this.data[col+','+res.row].name&&this.data[col+','+res.row].name!==''){
+            var newRow=this.copyToNextBlank(res,col,res.row);  //unfortunately, the table is not yet populated, so newRow may be occupied        
+            console.log(col + ',' + newRow)
+          }
+          else this.data[col+','+res.row]=res;
         });
         this.socket.unsyncUpdates('reservation');
         this.socket.syncUpdates('reservation', this.reservations, (event, item, array)=>{
@@ -442,6 +446,7 @@
           //this.timeout(()=>{this.updateRes(obj,address,true)},500);
         }
       }
+      return row;
     }
     
     delete(obj){
