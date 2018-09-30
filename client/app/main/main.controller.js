@@ -209,10 +209,14 @@
     
     cancel(col,row){
       this.data[col+','+row].canceled=!this.data[col+','+row].canceled;
+      var address=col+','+row;
+      this.main.updateRes(this.data[col+','+row],address,true);
     }
     
     checkIn(col,row){
       this.data[col+','+row].checkedIn=!this.data[col+','+row].checkedIn;
+      var address=col+','+row;
+      this.main.updateRes(this.data[col+','+row],address,true);
     }
     
     toggleDropdown(col,row){

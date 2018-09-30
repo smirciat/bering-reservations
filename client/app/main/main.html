@@ -19,6 +19,7 @@
       <div droppable="true" id="{{'drop' + col + ',' + row}}">
        <div draggable="true" id="{{'drag' + col + ',' + row}}">
         <div class="input-group">
+          <i ng-if="main.data[col+','+row].checkedIn" class="fas fa-check-square"></i>
           <input ng-class="main.isInterVillage(row) + ' ' + main.amIFocused(col,row) + ' ' + main.purple(col,row) + ' ' + main.red(col,row) + ' ' + main.orange(col,row) + ' ' + main.blue(col,row)"
             class="form-control name-input" type="text" ng-model="main.data[col+','+row].name"
             ng-blur="main.setOldObj(col,row)" ng-focus="main.newFocus('name',col,row)" 
@@ -31,7 +32,7 @@
             <button ng-blur="main.setOldObj(col,row)" type="button" uib-dropdown-toggle class="btn btn-primary my-dropdown"></button>
             <form style="right: 0; left: auto;" uib-dropdown-menu role="menu" class="dropdown-menu p-1">
               <div role="menuitem" class="form-group">
-                <button ng-click="main.checkIn(col,row)" class="btn btn-primary">Check In/Undo</button>
+                <button ng-click="main.checkIn(col,row)" class="btn btn-success">Check In/Undo</button>
               </div>
               <div role="menuitem" class="form-group">
                 <label>Weight</label>
@@ -60,7 +61,7 @@
                 <button ng-click="main.reschedule('Enter the updated information:',{})" class="btn btn-warning">Reschedule</button>
               </div>
               <div role="menuitem" class="form-group">
-                <button ng-click="main.return('Enter the return date and flight number:',main.data[col+','+row])" class="btn btn-success">Return</button>
+                <button ng-click="main.return('Enter the return date and flight number:',main.data[col+','+row])" class="btn btn-primary">Return</button>
               </div>
             </form>
           </div>
