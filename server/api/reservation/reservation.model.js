@@ -23,6 +23,7 @@ export default function(sequelize, DataTypes) {
     lastModifiedBy: DataTypes.STRING,
     dateReserved: DataTypes.DATE,
     dateModified: DataTypes.DATE,
-    canceled: DataTypes.BOOLEAN
+    canceled: DataTypes.BOOLEAN,
+    checkedIn: DataTypes.BOOLEAN
   });
 }

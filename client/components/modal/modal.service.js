@@ -61,8 +61,12 @@ angular.module('workspaceApp')
           return function() {
             var args = Array.prototype.slice.call(arguments),
                 name = args.shift(),
+                obj,
                 formData = {},
                 theModal;
+            if (args.length>0) obj=args[0]||{};
+            else obj={};
+            formData.obj=obj;
             theModal = openModal({ //openModal is a function the modal service defines.  It is just a wrapper for $uibModal
               modal: {
                 formData:formData,

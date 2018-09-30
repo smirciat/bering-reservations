@@ -45,6 +45,7 @@
       this.numCols=7;
       this.quickMessage=Modal.confirm.quickMessage();
       this.reschedule = Modal.confirm.enterData(formData =>{
+        console.log(formData)
         if (!formData.number||!formData.date||formData.number===""||formData.date===null) {
           this.quickMessage("Fail!  Try again and enter the new flight number and date");
         }
@@ -52,9 +53,23 @@
           this.oldObj.number=formData.number;
           this.oldObj.date=formData.date;
           var address=this.oldCol+','+this.oldRow;
-          this.updateRes(this.oldObj,address,false);
+          this.updateRes(this.oldObj,address,false,true);
         }
         
+      });
+      this.return = Modal.confirm.enterData(formData=>{
+        console.log(formData)
+        if (!formData.number||!formData.date||formData.number===""||formData.date===null) {
+          this.quickMessage("Fail!  Try again and enter the new flight number and date");
+        }
+        else {
+          var obj=angular.copy(formData.obj);
+          obj._id=undefined;
+          obj.number=formData.number;
+          obj.date=formData.date;
+          var address=this.oldCol+','+this.oldRow;
+          this.updateRes(obj,address,false,false);
+        }
       });
       this.keys = [];
       this.keys.push({ code: 38, action: ()=> { this.oldRow=this.row; this.row--; this.updateFocus(); }});
@@ -188,9 +203,16 @@
       if (this.data[col+','+row]&&this.data[col+','+row].canceled) return "orange";
     }
     
+    blue(col,row){
+      if (this.data[col+','+row]&&this.data[col+','+row].checkedIn) return "blue";
+    }
+    
     cancel(col,row){
       this.data[col+','+row].canceled=!this.data[col+','+row].canceled;
-      
+    }
+    
+    checkIn(col,row){
+      this.data[col+','+row].checkedIn=!this.data[col+','+row].checkedIn;
     }
     
     toggleDropdown(col,row){
@@ -399,7 +421,7 @@
           var col=this.findCol(res.number,res.direction);
           if (this.data[col+','+res.row]&&this.data[col+','+res.row].name&&this.data[col+','+res.row].name!==''){
             var newRow=this.copyToNextBlank(res,col,res.row);  //unfortunately, the table is not yet populated, so newRow may be occupied        
-            console.log(col + ',' + newRow)
+            //console.log(col + ',' + newRow)
           }
           else this.data[col+','+res.row]=res;
         });
@@ -409,7 +431,9 @@
             var col=this.findCol(item.number,item.direction);
             for (var i=1;i<=this.numCols;i++) {
               for (var j=1;j<=39;j++){
-                if (this.data[i+','+j]&&this.data[i+','+j]._id===item._id) this.data[i+','+j]={};
+                if (this.data[i+','+j]&&this.data[i+','+j]._id===item._id) {
+                  this.data[i+','+j]={};
+                }  
                 if (this.data[i+','+j]&&!this.data[i+','+j]._id&&this.data[i+','+j].name===item.name
                     &&this.colList[i].number===item.number) {
                       this.data[i+','+j]={};
@@ -453,7 +477,7 @@
       this.http.delete('/api/reservations/'+obj._id).then(response=>{});
     }
     
-    updateRes(obj,address,inTable){
+    updateRes(obj,address,inTable,reschedule){
       if (!obj||Object.keys(obj).length === 0||typeof obj==="undefined"||typeof this.data[address]==="undefined") return;
       if (obj.name===null||obj.name===""){
         this.data[address]={};
@@ -492,7 +516,7 @@
           }
           if (obj.row>0){
             this.commit(obj,address,false);
-            this.data[address]={};
+            if (reschedule) this.data[address]={};
           }
           });
       }
@@ -501,11 +525,13 @@
     commit(obj,address,inTable){
       if (obj._id) {
         var sameTable=false;//change to false to re-enable same tab checking prior to update
+        var sameDate=false;
         this.http.get('/api/reservations/'+obj._id).then(response=>{
+          if (this.moment(obj.date).isSame(this.moment(this.date),'day')) sameDate=true;
           var col = this.findCol(obj.number,obj.direction);
           if (col>=0) sameTable=true;
           //only do if not inTable or same table
-          if (!inTable||sameTable) {
+          if (!inTable||(sameTable&&sameDate)) {
             obj.lastModifiedBy=this.user.name;
             obj.dateModified=new Date();
             this.http.put('/api/reservations/'+obj._id,obj).then(response=>{
@@ -531,7 +557,7 @@
         this.http.post('/api/reservations',obj).then(response=>{
           if (!this.data[address]) return;
           this.data[address].purple=false;
-          this.data[address]._id=response.data._id;
+          if (inTable) this.data[address]._id=response.data._id;
           this.reservations.push(response.data);
         },err=>{
           console.log(err);

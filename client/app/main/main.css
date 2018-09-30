@@ -89,6 +89,9 @@
   .orange{
     color:orange !important;
   }
+  .blue{
+    color:blue !important;
+  }
 @media print{
   @page {size: landscape}
   .my-page{
