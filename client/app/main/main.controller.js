@@ -67,6 +67,8 @@
           obj._id=undefined;
           obj.number=formData.number;
           obj.date=formData.date;
+          if (obj.direction==="inbound") obj.direction="outbound";
+          else obj.direction="inbound";
           var address=this.oldCol+','+this.oldRow;
           this.updateRes(obj,address,false,false);
         }
