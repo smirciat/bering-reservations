@@ -24,6 +24,9 @@ export default function(sequelize, DataTypes) {
     dateReserved: DataTypes.DATE,
     dateModified: DataTypes.DATE,
     canceled: DataTypes.BOOLEAN,
-    checkedIn: DataTypes.BOOLEAN
+    checkedIn: {
+      type:DataTypes.BOOLEAN,
+      defaultValue:false
+    }
   });
 }
