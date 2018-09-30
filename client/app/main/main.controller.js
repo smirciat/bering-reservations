@@ -501,7 +501,7 @@
         obj.row=parseInt(addrArray[1],10);
         obj.date=this.date;
       }
-      obj.direction=this.colList[addrArray[0]].direction;
+      if (inTable||reschedule) obj.direction=this.colList[addrArray[0]].direction;
       if (inTable) this.commit(obj,address,true);
       else{
         var params={date:obj.date};
