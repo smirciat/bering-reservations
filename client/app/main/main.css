@@ -92,6 +92,9 @@
   .blue{
     color:blue !important;
   }
+  ::-webkit-scrollbar{
+    display:none;
+  }
 @media print{
   @page {size: landscape}
   .my-page{
