@@ -125,7 +125,7 @@
       this.user=this.getCurrentUser();
       this.timeout(()=>{
         if (this.isUser()) this.upDate(this.date);
-      },0);
+      },250);
     }
     
     reservedBy(col,row){
@@ -207,6 +207,12 @@
     
     blue(col,row){
       if (this.data[col+','+row]&&this.data[col+','+row].checkedIn) return "blue";
+    }
+    
+    check(col,row){
+      if (this.data[col+','+row]&&this.data[col+','+row].checkedIn) {
+        return "short-name-input";
+      }
     }
     
     cancel(col,row){

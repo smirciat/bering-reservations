@@ -19,14 +19,15 @@
       <div droppable="true" id="{{'drop' + col + ',' + row}}">
        <div draggable="true" id="{{'drag' + col + ',' + row}}">
         <div class="input-group">
-          <i ng-if="main.data[col+','+row].checkedIn" class="fas fa-check-square"></i>
-          <input ng-class="main.isInterVillage(row) + ' ' + main.amIFocused(col,row) + ' ' + main.purple(col,row) + ' ' + main.red(col,row) + ' ' + main.orange(col,row) + ' ' + main.blue(col,row)"
-            class="form-control name-input" type="text" ng-model="main.data[col+','+row].name"
-            ng-blur="main.setOldObj(col,row)" ng-focus="main.newFocus('name',col,row)" 
-            id="{{col+','+row}}">
+          <i ng-if="main.data[col+','+row].checkedIn" class="fas fa-check-square" print-remove></i>
+          <input class="form-control name-input" ng-class="main.isInterVillage(row) + ' ' + main.amIFocused(col,row) + ' ' + 
+            main.purple(col,row) + ' ' + main.red(col,row) + ' ' + main.orange(col,row) + ' ' + 
+            main.blue(col,row) + ' ' + main.check(col,row)" type="text" ng-model="main.data[col+','+row].name"
+            ng-blur="main.setOldObj(col,row)" ng-focus="main.newFocus('name',col,row)" id="{{col+','+row}}">
           <input class="form-control village-input" type="text" ng-model="main.data[col+','+row].village"
             ng-focus="main.newFocus('village',col,row)" ng-class="main.amIFocused(col,row)" 
-            ng-blur="main.setOldObj(col,row)" id="{{'village,'+col+','+row}}" uib-tooltip="{{main.data[col+','+row].reservedBy}}" tooltip-placement="below"><!--tooltip-placement="auto below">--> 
+            ng-blur="main.setOldObj(col,row)" id="{{'village,'+col+','+row}}" uib-tooltip="{{main.data[col+','+row].reservedBy}}" 
+            tooltip-placement="below"><!--tooltip-placement="auto below">--> 
           <div uib-dropdown auto-close="outsideClick" is-open="main.isOpen[col+','+row]" 
                 ng-class="main.bottomFour(row)" class="btn-group" ng-click="main.toggleDropdown(col,row)">
             <button ng-blur="main.setOldObj(col,row)" type="button" uib-dropdown-toggle class="btn btn-primary my-dropdown"></button>
