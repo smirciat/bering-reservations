@@ -45,7 +45,6 @@
       this.numCols=7;
       this.quickMessage=Modal.confirm.quickMessage();
       this.reschedule = Modal.confirm.enterData(formData =>{
-        console.log(formData)
         if (!formData.number||!formData.date||formData.number===""||formData.date===null) {
           this.quickMessage("Fail!  Try again and enter the new flight number and date");
         }
@@ -58,7 +57,6 @@
         
       });
       this.return = Modal.confirm.enterData(formData=>{
-        console.log(formData)
         if (!formData.number||!formData.date||formData.number===""||formData.date===null) {
           this.quickMessage("Fail!  Try again and enter the new flight number and date");
         }
@@ -76,6 +74,7 @@
       this.keys = [];
       this.keys.push({ code: 38, action: ()=> { this.oldRow=this.row; this.row--; this.updateFocus(); }});
       this.keys.push({ code: 40, action: ()=> { this.oldRow=this.row; this.row++; this.updateFocus(); }});
+      this.keys.push({ code: 13, action: ()=> { this.oldRow=this.row; this.row++; this.updateFocus(); }});
       this.keys.push({ code: 37, action: ()=> { this.oldCol=this.col; this.col--; this.updateFocus(); }});
       this.keys.push({ code: 39, action: ()=> { this.oldCol=this.col; this.col++; this.updateFocus(); }});
       $scope.$on('$destroy', function() {
@@ -288,7 +287,6 @@
           i=this.flightList.length;
         }
       }
-      console.log(this.flightList)
       this.updateTab(this.currentTab);
     }
     
