@@ -500,6 +500,7 @@
       }
       var addrArray=address.split(',');
       if (addrArray[0]==="-1"||addrArray[1]==="-1") return;
+      if (addrArray[1]==="33") return;
       this.data[address].red=false;
       this.data[address].purple=true;
       if (inTable){
