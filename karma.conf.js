@@ -18,6 +18,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       // bower:js
+      'client/bower_components/jquery/dist/jquery.js',
       'client/bower_components/angular/angular.js',
       'client/bower_components/angular-resource/angular-resource.js',
       'client/bower_components/angular-cookies/angular-cookies.js',
@@ -27,6 +28,11 @@ module.exports = function(config) {
       'client/bower_components/angular-socket-io/socket.js',
       'client/bower_components/angular-ui-router/release/angular-ui-router.js',
       'client/bower_components/angular-validation-match/dist/angular-validation-match.min.js',
+      'client/bower_components/ui-select/dist/select.js',
+      'client/bower_components/select2/dist/js/select2.js',
+      'client/bower_components/microplugin/src/microplugin.js',
+      'client/bower_components/sifter/sifter.js',
+      'client/bower_components/selectize/dist/js/selectize.js',
       'client/bower_components/angular-animate/angular-animate.js',
       'client/bower_components/angular-touch/angular-touch.js',
       'client/bower_components/angularPrint/angularPrint.js',

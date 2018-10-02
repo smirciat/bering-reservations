@@ -124,7 +124,7 @@
       this.user=this.getCurrentUser();
       this.timeout(()=>{
         if (this.isUser()) this.upDate(this.date);
-      },250);
+      },750);
     }
     
     reservedBy(col,row){
