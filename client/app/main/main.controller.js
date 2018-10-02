@@ -13,6 +13,7 @@
       this.socket = socket;
       this.scope=$scope;
       this.window=$window;
+      this.loaded=false;
       this.timeout=$timeout;
       this.appConfig=appConfig;
       this.flights=[];
@@ -123,6 +124,7 @@
     $onInit() {
       this.user=this.getCurrentUser();
       this.timeout(()=>{
+        this.loaded=true;
         if (this.isUser()) this.upDate(this.date);
       },750);
     }
