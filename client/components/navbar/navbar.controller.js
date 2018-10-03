@@ -48,7 +48,10 @@ class NavbarController {
   
   clickTab = function(index){
     if (this.location.path()==='/') {
-      if (this.scope.main.httpRunning) return;
+      if (this.scope.main.httpRunning) {
+        console.log('stopped');
+        return;
+      }
       var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
       this.scope.main.updateRes(this.scope.main.oldObj,address,true);
       this.tabs.forEach(tab=>{
