@@ -53,7 +53,8 @@
               </div>
               <div role="menuitem" class="form-group">
                 <label>Comment</label>
-                <input ng-blur="main.setOldObj(col,row)" ng-model="main.data[col+','+row].comment" type="text" class="form-control" placeholder="Comment">
+                <textarea rows="2" ng-blur="main.setOldObj(col,row)" ng-model="main.data[col+','+row].comment" 
+                    class="form-control" placeholder="Comment"></textarea>
               </div>
               <div role="menuitem" class="form-group">
                 <button ng-click="main.cancel(col,row)" class="btn btn-danger">Cancel/Restore</button>

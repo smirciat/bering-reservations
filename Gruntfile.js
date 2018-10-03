@@ -377,7 +377,15 @@ module.exports = function(grunt) {
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/<%= yeoman.client %>/assets/images',
           src: ['generated/*']
-        }, {
+        },  
+        //ttf and woff
+        {
+            cwd: '<%= yeoman.client %>/bower_components/components-font-awesome/webfonts',
+            src: ['*.*'],
+            dest: '<%= yeoman.dist %>/client/webfonts',
+            expand: true
+        }, 
+        {
           expand: true,
           dest: '<%= yeoman.dist %>',
           src: [

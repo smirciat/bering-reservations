@@ -14,7 +14,7 @@ class NavbarController {
     this.isLoggedIn = Auth.isLoggedIn;
     this.isAdmin = Auth.isAdmin;
     this.getCurrentUser = Auth.getCurrentUser;
-    this.$location=$location;
+    this.location=$location;
     this.$window=$window;
     this.$timeout=$timeout;
     this.scope=$scope;
@@ -43,28 +43,34 @@ class NavbarController {
   }
   
   isRoute = function(route){
-    return this.$location.path()===('/' + route);
+    return this.location.path()===('/' + route);
   }
   
   clickTab = function(index){
-    var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
-    this.scope.main.updateRes(this.scope.main.oldObj,address,true);
-    this.tabs.forEach(tab=>{
-      tab.isActive='';
-    });
-    this.tabs[index].isActive='active';
-    this.scope.main.updateTab(index+1);
+    if (this.location.path()==='/') {
+      var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
+      this.scope.main.updateRes(this.scope.main.oldObj,address,true);
+      this.tabs.forEach(tab=>{
+        tab.isActive='';
+      });
+      this.tabs[index].isActive='active';
+      this.scope.main.updateTab(index+1);
+    }
   }
   
   upDate = function(){
-    var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
-    this.scope.main.updateRes(this.scope.main.oldObj,address,true);
-    this.scope.main.upDate(this.currDate);
+    if (this.location.path()==='/') {
+      var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
+      this.scope.main.updateRes(this.scope.main.oldObj,address,true);
+      this.scope.main.upDate(this.currDate);
+    }
   }
   
   goto = function(sref){
-    var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
-    this.scope.main.updateRes(this.scope.main.oldObj,address,true);
+    if (this.location.path()==='/') {
+      var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
+      this.scope.main.updateRes(this.scope.main.oldObj,address,true);
+    }
     this.state.go(sref);
   }
 

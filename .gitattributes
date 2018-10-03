@@ -29,6 +29,10 @@
 *.zip  binary
 *.7z   binary
 *.ttf  binary
+*.eot binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
 
 # Documents
 *.doc  diff=astextplain

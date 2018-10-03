@@ -486,6 +486,7 @@
     }
     
     delete(obj){
+      if (this.user.name==='pilots') return;
       this.http.delete('/api/reservations/'+obj._id).then(response=>{});
     }
     
@@ -536,6 +537,7 @@
     }
     
     commit(obj,address,inTable){
+      if (this.user.name==='pilots') return;
       if (obj._id) {
         var sameTable=false;//change to false to re-enable same tab checking prior to update
         var sameDate=false;
