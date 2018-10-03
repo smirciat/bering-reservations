@@ -23,6 +23,7 @@
       this.colList=[];
       this.date=new Date();
       this.isDatepickerOpen=false;
+      this.httpRunning=false;
       this.datePickerOptions={};
       this.currentTab=1;
       this.timeoutInterval=0;
@@ -418,6 +419,7 @@
     
     setFlights(){
       var obj={date:this.date};
+      this.httpRunning=true;
       this.http.post('/api/reservations/day', obj).then(response=>{
         var arr=response.data.filter(res=>{
           return res.name!==""&&res.row<=39;
@@ -466,6 +468,7 @@
             }
           },0);
         });
+        this.httpRunning=false;
       });
     }
     
