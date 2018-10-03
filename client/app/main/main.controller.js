@@ -468,7 +468,9 @@
             }
           },0);
         });
-        this.timeout(()=>{this.httpRunning=false},250);
+        this.timeout(()=>{
+          this.httpRunning=false
+        },1000);
       });
     }
     
