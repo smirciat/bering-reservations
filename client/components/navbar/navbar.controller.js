@@ -71,7 +71,12 @@ class NavbarController {
       var address=this.scope.main.oldCol+','+this.scope.main.oldRow;
       this.scope.main.updateRes(this.scope.main.oldObj,address,true);
     }
-    this.state.go(sref);
+    if (sref==='logout') {
+      this.$timeout(()=>{
+        this.state.go(sref);
+      },500)
+    }
+    else this.state.go(sref);
   }
 
 }
