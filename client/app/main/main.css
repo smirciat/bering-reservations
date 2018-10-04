@@ -51,6 +51,9 @@
   padding-top: 0.1em; 
   padding-bottom: 0.1em;
 }
+.tooltip-inner{
+  white-space: pre-line;
+}
 .my-dropdown{
   height:1.5em;
   padding-top: 0.1em; 

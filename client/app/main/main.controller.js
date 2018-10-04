@@ -127,7 +127,7 @@
       this.timeout(()=>{
         this.loaded=true;
         if (this.isUser()) this.upDate(this.date);
-      },0);
+      },250);
     }
     
     reservedBy(col,row){
@@ -209,6 +209,11 @@
     
     blue(col,row){
       if (this.data[col+','+row]&&this.data[col+','+row].checkedIn) return "blue";
+    }
+    
+    tooltip(col,row){
+      if (this.data[col+','+row]&&this.data[col+','+row].reservedBy) 
+         return this.data[col+','+row].reservedBy + '\n' + this.data[col+','+row].comment;
     }
     
     check(col,row){
