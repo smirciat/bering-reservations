@@ -127,7 +127,7 @@
       this.timeout(()=>{
         this.loaded=true;
         if (this.isUser()) this.upDate(this.date);
-      },250);
+      },750);
     }
     
     reservedBy(col,row){
@@ -426,6 +426,7 @@
     }
     
     setFlights(){
+      this.data={};
       var obj={date:this.date};
       this.canceller.resolve();
       this.canceller = this.$q.defer();
