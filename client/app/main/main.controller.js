@@ -6,7 +6,6 @@
 
     constructor($http, $scope, socket,$timeout,$window,appConfig,moment,Modal,Auth,$q) {
       var constSelf=this;
-      //$http.get('/api/reservations').then(response=>{console.log(response.data)});
       this.http = $http;
       this.getCurrentUser=Auth.getCurrentUser;
       this.isUser=Auth.isUser;
@@ -25,7 +24,6 @@
       this.colList=[];
       this.date=new Date();
       this.isDatepickerOpen=false;
-      this.httpRunning=false;
       this.datePickerOptions={};
       this.currentTab=1;
       this.timeoutInterval=0;
@@ -428,8 +426,7 @@
         url:'/api/reservations/day',
         data:obj,
         timeout:this.canceller.promise
-      }
-      //this.httpRunning=true;
+      };
       this.http(req).then(response=>{
         var arr=response.data.filter(res=>{
           return res.name!==""&&res.row<=39;
@@ -478,11 +475,9 @@
             }
           },0);
         });
-        //this.timeout(()=>{
-        //  this.httpRunning=false
-        //},1000);
       },err=>{
-        console.log(err);
+        if (err.data.status===-1) console.log('cancelled, click slower!');
+        else console.log(err);
       });
     }
     
