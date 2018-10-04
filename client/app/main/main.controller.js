@@ -212,8 +212,11 @@
     }
     
     tooltip(col,row){
-      if (this.data[col+','+row]&&this.data[col+','+row].reservedBy) 
-         return this.data[col+','+row].reservedBy + '\n' + this.data[col+','+row].comment;
+      if (this.data[col+','+row]&&this.data[col+','+row].reservedBy) {
+        var string=this.data[col+','+row].reservedBy;
+        if (this.data[col+','+row].comment) string += '\n' + this.data[col+','+row].comment;
+        return string;
+      }
     }
     
     check(col,row){
