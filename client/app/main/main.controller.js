@@ -427,7 +427,7 @@
         method:"POST",
         url:'/api/reservations/day',
         data:obj,
-        timeout:this.canceller
+        timeout:this.canceller.promise
       }
       //this.httpRunning=true;
       this.http(req).then(response=>{
