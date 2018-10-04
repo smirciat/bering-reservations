@@ -4,7 +4,7 @@
 
   class MainController {
 
-    constructor($http, $scope, socket,$timeout,$window,appConfig,moment,Modal,Auth) {
+    constructor($http, $scope, socket,$timeout,$window,appConfig,moment,Modal,Auth,$q) {
       var constSelf=this;
       //$http.get('/api/reservations').then(response=>{console.log(response.data)});
       this.http = $http;
@@ -12,6 +12,8 @@
       this.isUser=Auth.isUser;
       this.socket = socket;
       this.scope=$scope;
+      this.$q=$q;
+      this.canceller = this.$q.defer();
       this.window=$window;
       this.loaded=false;
       this.timeout=$timeout;
@@ -419,8 +421,16 @@
     
     setFlights(){
       var obj={date:this.date};
-      this.httpRunning=true;
-      this.http.post('/api/reservations/day', obj).then(response=>{
+      this.canceller.resolve();
+      this.canceller = this.$q.defer();
+      var req={
+        method:"POST",
+        url:'/api/reservations/day',
+        data:obj,
+        timeout:this.canceller
+      }
+      //this.httpRunning=true;
+      this.http(req).then(response=>{
         var arr=response.data.filter(res=>{
           return res.name!==""&&res.row<=39;
         });
@@ -468,9 +478,11 @@
             }
           },0);
         });
-        this.timeout(()=>{
-          this.httpRunning=false
-        },1000);
+        //this.timeout(()=>{
+        //  this.httpRunning=false
+        //},1000);
+      },err=>{
+        console.log(err);
       });
     }
     
