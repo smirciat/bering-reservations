@@ -127,7 +127,7 @@
       this.timeout(()=>{
         this.loaded=true;
         if (this.isUser()) this.upDate(this.date);
-      },750);
+      },0);
     }
     
     reservedBy(col,row){
