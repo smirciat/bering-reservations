@@ -476,7 +476,7 @@
           },0);
         });
       },err=>{
-        if (err.data&&err.data.status===-1) console.log('cancelled, click slower!');
+        if (err.status===-1) console.log('cancelled, click slower!');
         else console.log(err);
       });
     }
