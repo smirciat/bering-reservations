@@ -26,8 +26,8 @@
             ng-blur="main.setOldObj(col,row)" ng-focus="main.newFocus('name',col,row)" id="{{col+','+row}}">
           <input class="form-control village-input" type="text" ng-model="main.data[col+','+row].village"
             ng-focus="main.newFocus('village',col,row)" ng-class="main.amIFocused(col,row)" 
-            ng-blur="main.setOldObj(col,row)" id="{{'village,'+col+','+row}}" 
-            uib-tooltip="{{main.tooltip(col,row)}}" tooltip-placement="auto below"><!--tooltip-placement="auto below">--> 
+            ng-blur="main.setOldObj(col,row)" id="{{'village,'+col+','+row}}" tooltip-placement="auto bottom"
+            uib-tooltip="{{main.tooltip(col,row)}}" ><!--tooltip-placement="auto below">--> 
           <div uib-dropdown auto-close="outsideClick" is-open="main.isOpen[col+','+row]" 
                 ng-class="main.bottomFour(row)" class="btn-group" ng-click="main.toggleDropdown(col,row)">
             <button ng-blur="main.setOldObj(col,row)" type="button" uib-dropdown-toggle class="btn btn-primary my-dropdown"></button>
