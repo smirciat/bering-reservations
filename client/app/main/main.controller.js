@@ -559,6 +559,9 @@
     
     commit(obj,address,inTable){
       if (this.user.name==='pilots') return;
+      if (this.updatingObj&&this.updatingObj.name===obj.name&&this.updatingObj._id===obj._id&&
+             this.updatingObj.row===obj.row&&this.updatingObj.col===obj.col) return;
+      this.updatingObj=obj;
       if (obj._id) {
         var sameTable=false;//change to false to re-enable same tab checking prior to update
         var sameDate=false;
@@ -577,14 +580,23 @@
                   res=response.data;//perhaps not needed?
                 }
               });
+              this.timeout(()=>{
+                this.updatingObj={};
+              },500);
             },err=>{
               console.log(err);
               this.data[address].purple=false;
               this.data[address].red=true;
+              this.timeout(()=>{
+                this.updatingObj={};
+              },500);
             });
           }
         },err=>{
           console.log(err);
+          this.timeout(()=>{
+            this.updatingObj={};
+          },500);
         });
       }
       else {
@@ -595,10 +607,16 @@
           this.data[address].purple=false;
           if (inTable) this.data[address]._id=response.data._id;
           this.reservations.push(response.data);
+          this.timeout(()=>{
+            this.updatingObj={};
+          },500);
         },err=>{
           console.log(err);
           this.data[address].purple=false;
           this.data[address].red=true;
+          this.timeout(()=>{
+            this.updatingObj={};
+          },500);
         });
       }
     }
