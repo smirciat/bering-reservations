@@ -140,6 +140,7 @@
       this.oldCol=col;
       this.oldRow=row;
       this.timeout(()=>{
+        if (col===this.col&&row===this.row) return;
         var address=this.oldCol+','+this.oldRow;
         this.updateRes(this.oldObj,address,true);
       });
