@@ -119,7 +119,8 @@
                 else dropIndex=dragIndex+1;
               }
               else if (onset===1&&(dragCol===5||dragCol===6)) dropIndex=dragIndex-1;
-                   else dropIndex=dragIndex+1;
+                   else if (dragIndex===constSelf.flightList.length-1) dropIndex=dragIndex-1;
+                        else dropIndex=dragIndex+1;
             }
             else {
               dropIndex=constSelf.flightList.findIndex(function(flight){
