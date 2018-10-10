@@ -222,7 +222,7 @@
     
     checkRow(index){
       var rowClass="";
-      if (index===9||index===33) rowClass+= " double-line";
+      if (index===9||index===33||index===18) rowClass+= " double-line";
       return rowClass;
     }
     
