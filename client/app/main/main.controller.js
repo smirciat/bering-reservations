@@ -90,7 +90,7 @@
         });
       });
       $scope.handleDragStart = function(e){
-        constSelf.dragID=this.id.substring(4);
+        constSelf.dragID=this.id;//.substring(4);
         e.dataTransfer.setData('text', 'foo');
       };
       $scope.handleDragEnd = function(e){
@@ -98,17 +98,52 @@
       $scope.handleDrop =function(e){
         e.preventDefault();
         e.stopPropagation();
-        constSelf.dropID=this.id.substring(4);
-        var drag=constSelf.dragID;
-        var drop=constSelf.dropID;
-        if (drag!==drop){
-          var temp=angular.copy(constSelf.data[drag]);
-          constSelf.data[drag]=angular.copy(constSelf.data[drop]);
-          constSelf.data[drop]=angular.copy(temp);
-          constSelf.updateRes(constSelf.data[drag],drag,true);
-          constSelf.updateRes(constSelf.data[drop],drop,true);
+        constSelf.dropID=this.id;//.substring(4);
+        if (constSelf.dragID.substring(0,4)==="head"||constSelf.dropID.substring(0,4)==="head"){
+          if (constSelf.dragID.substring(0,4)==="head"&&constSelf.dropID.substring(0,4)==="head"){
+            var dragCol=parseInt(constSelf.dragID.slice(-1),10);
+            var dropCol=parseInt(constSelf.dropID.slice(-1),10);
+            var dragNumber=constSelf.findNumber(dragCol).number;
+            var dropNumber=constSelf.findNumber(dropCol).number;
+            if (dragNumber==='805'||dropNumber==='805'||dragNumber==='605'||dropNumber==='605') return;
+            var offset=0,onset=0;
+            if (constSelf.colList[1].number==="805") offset=1;
+            if (constSelf.colList[constSelf.colList.length-1].number==="605") onset=1;
+            var dragIndex=constSelf.flightList.findIndex(function(flight){
+              return flight.number===dragNumber;
+            });
+            var dropIndex;
+            if (dragNumber===dropNumber) {
+              if (offset===0&&(dragCol===1||dragCol===2)) {
+                if (dragIndex>0) dropIndex=dragIndex-1;
+                else dropIndex=dragIndex+1;
+              }
+              else if (onset===1&&(dragCol===5||dragCol===6)) dropIndex=dragIndex-1;
+                   else dropIndex=dragIndex+1;
+            }
+            else {
+              dropIndex=constSelf.flightList.findIndex(function(flight){
+                return flight.number===dropNumber;
+              });
+            }
+            var temp=constSelf.flightList[dragIndex];
+            constSelf.flightList[dragIndex]=constSelf.flightList[dropIndex];
+            constSelf.flightList[dropIndex]=temp;
+            constSelf.updateTab(constSelf.currentTab);
+          }
         }
-        $scope.$apply();//important
+        else {
+          var drag=constSelf.dragID.substring(4);
+          var drop=constSelf.dropID.substring(4);
+          if (drag!==drop){
+            var temp=angular.copy(constSelf.data[drag]);
+            constSelf.data[drag]=angular.copy(constSelf.data[drop]);
+            constSelf.data[drop]=angular.copy(temp);
+            constSelf.updateRes(constSelf.data[drag],drag,true);
+            constSelf.updateRes(constSelf.data[drop],drop,true);
+            $scope.$apply();//important
+          }
+        }
       };
       $scope.handleDragOver = function (e) {
         e.preventDefault(); // Necessary. Allows us to drop.
@@ -366,6 +401,14 @@
         if (col.number===number&&col.direction===direction) returnCol=index;
       });
       return returnCol;
+    }
+    
+    findNumber(col){
+      var number="-1";
+      this.colList.forEach((col,index)=>{
+        if (index===col) number=col.number;
+      });
+      return number;
     }
     
     findNumber(col){

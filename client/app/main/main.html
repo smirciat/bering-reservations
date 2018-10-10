@@ -9,9 +9,13 @@
   <div style="text-align:center" print-only><h3>{{main.date | date:'dd MMM, yyyy'}}</h3></div>
   <div class="row nogap">
     <div style="text-align:center" class="col off-on" ng-repeat="col in main.cols">
-      <div><p class="top-label">{{main.flights.one[col].times}}</p></div>
-      <div><p class="other-label">{{main.flights.one[col].route}}</p></div>
-      <div><p class="other-label">{{main.flights.one[col].label}}</p></div>
+      <div droppable="true" id="{{'headdrop'+col}}">
+        <div draggable="true" id="{{'headdrag'+col}}">
+          <div><p class="top-label">{{main.flights.one[col].times}}</p></div>
+          <div><p class="other-label">{{main.flights.one[col].route}}</p></div>
+          <div><p class="other-label">{{main.flights.one[col].label}}</p></div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="row nogap" ng-repeat="row in main.rows">
