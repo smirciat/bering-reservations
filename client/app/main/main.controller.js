@@ -404,14 +404,6 @@
     }
     
     findNumber(col){
-      var number="-1";
-      this.colList.forEach((col,index)=>{
-        if (index===col) number=col.number;
-      });
-      return number;
-    }
-    
-    findNumber(col){
       return this.colList[col];
     }
     
