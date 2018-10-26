@@ -23,6 +23,11 @@ exports = module.exports = {
             {number:'605',off:'1730',on:'1845',routing:'OTZ-OME',sunday:false,weekday:true,saturday:false,inbound:false,outbound:true,morning:false,base:'OTZ'}
             ],
   extras:[//]//[{date:new Date('9/30/2018'),flights:['2655','3655','2685','3685','2625','3625']},
-          {date:new Date('10/7/2018'),flights:['2685','3685']}
+          {date:new Date('10/7/2018'),flights:['2685','3685']},
+          {date:new Date('10/28/18'),flights:['2685','3685','4685','2632','3632','4632']},
+          {date:new Date('11/4/18'),flights:['2685','3685','4685','2632','3632','4632']},
+          {date:new Date('11/11/18'),flights:['2685','3685','4685','2632','3632','4632']},
+          {date:new Date('11/18/18'),flights:['2685','3685','4685','2632','3632','4632']},
+          {date:new Date('11/25/18'),flights:['2685','3685','4685','2632','3632','4632']},
   ]
 };
