@@ -33,8 +33,7 @@
       this.oldRow=-1;
       this.morningTabs=2;
       this.afternoonTabs=2;
-      this.data={'2,1':{name:'Passenger Name',village:'OTZ',phone:'907-555-1212',
-          weight:199,email:'test@example.com',comment:'comment',ticket:'ticket#'}};
+      this.data={};
       this.rows=[];
       for (var i=1;i<=39;i++) {
         this.rows.push(i);
@@ -151,11 +150,6 @@
         e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
         return false;
       };
-      $scope.$watchGroup(['main.col','main.row'],(newValues,oldValues)=>{
-        //var address=this.oldCol+','+this.oldRow;
-        //this.updateRes(this.oldObj,address,true);
-      });
-      
     }
 
     $onInit() {
@@ -164,6 +158,18 @@
         this.loaded=true;
         if (this.isUser()) this.upDate(this.date);
       },750);
+    }
+    
+    preReturn(obj){
+      var address=this.col+','+this.row;
+      this.updateRes(obj,address,true);
+      this.return('Enter the return date and flight number:',obj);
+    }
+    
+    preReschedule(obj){
+      var address=this.col+','+this.row;
+      //this.updateRes(obj,address,true);
+      this.reschedule('Enter the updated information:',{});
     }
     
     reservedBy(col,row){
@@ -558,11 +564,11 @@
         return;
       }
       var addrArray=address.split(',');
-      if (addrArray[0]==="-1"||addrArray[1]==="-1") return;
-      if (addrArray[1]==="33") return;
-      this.data[address].red=false;
-      this.data[address].purple=true;
       if (inTable){
+        if (addrArray[0]==="-1"||addrArray[1]==="-1") return;
+        if (addrArray[1]==="33") return;
+        this.data[address].red=false;
+        this.data[address].purple=true;
         obj.number=this.colList[addrArray[0]].number;
         obj.row=parseInt(addrArray[1],10);
         obj.date=this.date;

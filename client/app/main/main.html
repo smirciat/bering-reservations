@@ -64,10 +64,12 @@
                 <button ng-click="main.cancel(col,row)" class="btn btn-danger">Cancel/Restore</button>
               </div>
               <div role="menuitem" class="form-group">
-                <button ng-click="main.reschedule('Enter the updated information:',{})" class="btn btn-warning">Reschedule</button>
+                <!--<button ng-click="main.reschedule('Enter the updated information:',{})" class="btn btn-warning">Reschedule</button>-->
+                <button ng-click="main.preReschedule(main.data[col+','+row])" class="btn btn-warning">Reschedule</button>
               </div>
               <div role="menuitem" class="form-group">
-                <button ng-click="main.return('Enter the return date and flight number:',main.data[col+','+row])" class="btn btn-primary">Return</button>
+                <!--<button ng-click="main.return('Enter the return date and flight number:',main.data[col+','+row])" -->
+                <button ng-click="main.preReturn(main.data[col+','+row])" class="btn btn-primary">Return</button>
               </div>
             </form>
           </div>
