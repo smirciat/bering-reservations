@@ -419,8 +419,6 @@
       this.cols=[];
       for (var i=1;i<=this.numCols;i++) {
         this.cols.push(i);
-        this.data[i+',33']={};
-        this.data[i+',33'].name='INTER VILLAGE';
       }
       this.flights={};
       this.flights.one=[];
@@ -470,6 +468,10 @@
     
     setFlights(){
       this.data={};
+      for (var i=1;i<=this.numCols;i++) {
+        this.data[i+',33']={};
+        this.data[i+',33'].name='INTER VILLAGE';
+      }
       var obj={date:this.date};
       this.canceller.resolve();
       this.canceller = this.$q.defer();
