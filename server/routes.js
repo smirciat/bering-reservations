@@ -6,9 +6,15 @@
 
 import errors from './components/errors';
 import path from 'path';
+import lusca from 'lusca';
+import * as auth from './auth/auth.service';
 
 export default function(app) {
   // Insert routes below
+  app.get('/pdf', auth.hasRole('user'),function(req, res){
+    if (req.query) res.sendFile("./pdfs/" + req.query.filename, {root: __dirname});
+    else res.status(500);
+  });
   app.use('/api/mails', require('./api/mail'));
   app.use('/api/reservations', require('./api/reservation'));
   app.use('/api/things', require('./api/thing'));

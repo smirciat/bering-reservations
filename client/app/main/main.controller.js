@@ -160,6 +160,97 @@
       },750);
     }
     
+    manifest(){
+      var tickets=['dest1TicketNoRow','dest2TicketNoRow','dest3TicketNoRow'];
+      var names=['dest1PaxNameRow','dest2PaxNameRow','dest3PaxNameRow'];
+      var weights=['dest1PaxWeightRow','dest2PaxWeightRow','dest3PaxWeightRow'];
+      this.http({ url: "/pdf?filename=OSM.pdf", 
+          method: "GET", 
+          headers: { 'Accept': 'application/pdf' }, 
+          responseType: 'arraybuffer' })
+        .then(response=> {
+          //set flight info
+          var outboundCol=-1;
+          var inboundCol=-1;
+          var number=this.colList[this.col].number;
+          var routing=this.colList[this.col].routing;
+          if (routing.substring(0,3)==="OTZ") routing=routing.substring(4);
+          this.colList.forEach((col,index)=>{
+            if (col.number===number){
+              if (col.direction==="outbound") {
+                outboundCol=index;
+              }
+              else {
+                inboundCol=index;
+              }
+            }
+          });
+          //console.log("number=" + number);
+          //console.log("routing=" + routing);
+          //console.log("outboundCol=" + outboundCol);
+          //console.log("inboundCol=" + inboundCol);
+          //console.log(this.data[outboundCol+',1']);
+          var fields={"routinga":[routing],"flightNoa":[number]};
+          var paxArrays=[];
+          var destinations=routing.split("-");
+          destinations.forEach((dest,index)=>{
+            paxArrays.push([]);
+            switch (index){
+              case 0: fields.dest1a=[dest];
+                      break;
+              case 1: fields.dest2a=[dest];
+                      break;
+              case 2: fields.dest3a=[dest];
+                      break;
+            }
+          });
+          //Step through outbound reservations.  Results in separate arrays by village
+          if (outboundCol>=1){
+            var dest1="none";
+            var dest2="none";
+            var dest3="none";
+            var rowCount=[1,1,1,1];
+            if (destinations&&destinations.length>0) dest1=destinations[0];
+            if (destinations&&destinations.length>1) dest2=destinations[1];
+            if (destinations&&destinations.length>2) dest3=destinations[2];
+            
+            for (var i=1;i<33;i++){
+              var obj=this.data[outboundCol+','+i];
+              if (obj&&obj.name!==null&&obj.name!==""&&obj.checkedIn&&!obj.canceled){
+                switch (obj.village.toUpperCase()){
+                  case dest2: paxArrays[1].push(obj)
+                              break;
+                  case dest3: paxArrays[2].push(obj)
+                              break;
+                  default: paxArrays[0].push(obj)
+                              break;
+                }
+              }
+            }
+            paxArrays.forEach((paxArray,index)=>{//index is dest#
+              paxArray.forEach((pax,j)=>{//j matches up with rowCount index
+                var nameField=names[index]+(j+1).toString()+'a';
+                var weightField=weights[index]+(j+1).toString()+'a';
+                var ticketField=tickets[index]+(j+1).toString()+'a';
+                fields[nameField]=[pax.name];
+                fields[ticketField]=[pax.invoice];
+                var weight=pax.weight||0;
+                fields[weightField]=[weight];
+              });
+            });
+          }
+          console.log(fields)
+          //Step THrouh Inbound Reservations
+          //Step through Inter-Village Reservations
+          //Step through arrays to fill fields
+          //finish pdf and save
+          var filled_pdf; // Uint8Array
+  		    filled_pdf = pdfform().transform(response.data, fields);
+  		    var blob = new Blob([filled_pdf], {type: 'application/pdf'});
+  	      saveAs(blob, 'pdfform.js_generated.pdf');
+      });
+    }
+    
     preReturn(obj){
       var address=this.col+','+this.row;
       this.updateRes(obj,address,true);
@@ -433,7 +524,7 @@
                 " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 \u00A0\u00A0 On " + this.flightList[this.index].on;
             this.flights.one[i].route = this.flightList[this.index].number + " " + this.flightList[this.index].routing;
             this.flights.one[i].label="OUTBOUND";
-            this.colList[i]={number:this.flightList[this.index].number,direction:"outbound"};
+            this.colList[i]={number:this.flightList[this.index].number,direction:"outbound",routing:this.flightList[this.index].routing};
           }
           else {
             i--;//there is no outbound leg for this flight, do not take up a colum with it
@@ -454,7 +545,7 @@
                 " A/C \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  On " + this.flightList[this.index].on;
             this.flights.one[i].route = this.flightList[this.index].number + " " + route;
             this.flights.one[i].label="INBOUND";
-            this.colList[i]={number:this.flightList[this.index].number,direction:"inbound"};
+            this.colList[i]={number:this.flightList[this.index].number,direction:"inbound",routing:this.flightList[this.index].routing};
           }
           else {
             i--;//there is no inbound leg for this flight, do not take up a colum with it
