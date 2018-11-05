@@ -216,6 +216,7 @@
             
             for (var i=1;i<33;i++){
               var obj=this.data[outboundCol+','+i];
+              if (obj&&!obj.village) obj.village="";
               if (obj&&obj.name!==null&&obj.name!==""&&obj.checkedIn&&!obj.canceled){
                 switch (obj.village.toUpperCase()){
                   case dest2: paxArrays[1].push(obj)
