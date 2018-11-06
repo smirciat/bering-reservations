@@ -204,15 +204,15 @@
                       break;
             }
           });
+          var dest1="none";
+          var dest2="none";
+          var dest3="none";
+          var rowCount=[1,1,1,1];
+          if (destinations&&destinations.length>0) dest1=destinations[0];
+          if (destinations&&destinations.length>1) dest2=destinations[1];
+          if (destinations&&destinations.length>2) dest3=destinations[2];
           //Step through outbound reservations.  Results in separate arrays by village
           if (outboundCol>=1){
-            var dest1="none";
-            var dest2="none";
-            var dest3="none";
-            var rowCount=[1,1,1,1];
-            if (destinations&&destinations.length>0) dest1=destinations[0];
-            if (destinations&&destinations.length>1) dest2=destinations[1];
-            if (destinations&&destinations.length>2) dest3=destinations[2];
             
             for (var i=1;i<33;i++){
               var obj=this.data[outboundCol+','+i];
@@ -240,10 +240,41 @@
               });
             });
           }
-          console.log(fields)
           //Step THrouh Inbound Reservations
+          if (inboundCol>=1){
+            var count=1;
+            paxArrays=[];
+            destinations.forEach((dest,index)=>{
+              paxArrays.push([]);
+            });
+            for (var i=1;i<33;i++){
+              var obj=this.data[inboundCol+','+i];
+              if (obj&&!obj.village) obj.village="";
+              if (obj&&obj.name!==null&&obj.name!==""&&!obj.canceled){
+                switch (obj.village.toUpperCase()){
+                  case dest2: paxArrays[1].push(obj)
+                              break;
+                  case dest3: paxArrays[2].push(obj)
+                              break;
+                  default: paxArrays[0].push(obj)
+                              break;
+                }
+              }
+            }
+            paxArrays.forEach((paxArray,index)=>{//index is dest#
+              //header
+              var headField="returnsRow" + count + "a";
+              fields[headField]=[destinations[index]+'-OTZ'];
+              count++;
+              paxArray.forEach((pax,j)=>{//j matches up with rowCount index
+                var nameField="returnsRow" + count + "a";
+                fields[nameField]=[pax.name];
+                count++
+              });
+              count++;
+            });
+          }
           //Step through Inter-Village Reservations
-          //Step through arrays to fill fields
           //finish pdf and save
           var filled_pdf; // Uint8Array
   		    filled_pdf = pdfform().transform(response.data, fields);

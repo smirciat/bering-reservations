@@ -123,5 +123,9 @@
    box-shadow:none;
    border-style:none;
   }
+  .space{
+    margin-left:20px;
+    margin-right:20px;
+  }
   
 }
