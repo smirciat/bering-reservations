@@ -279,7 +279,12 @@
           var filled_pdf; // Uint8Array
   		    filled_pdf = pdfform().transform(response.data, fields);
   		    var blob = new Blob([filled_pdf], {type: 'application/pdf'});
-  	      saveAs(blob, 'pdfform.js_generated.pdf');
+  		    var dateObj = new Date(this.date);
+          var month = dateObj.getUTCMonth() + 1; //months from 1-12
+          var day = dateObj.getUTCDate();
+          var year = dateObj.getUTCFullYear();
+  		    var filename="OSM_" + year + '_' + month + '_' + day + '_' + number + '.pdf';
+  	      saveAs(blob, filename);
       });
     }
     
