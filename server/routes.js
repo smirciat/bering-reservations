@@ -15,6 +15,7 @@ export default function(app) {
     if (req.query) res.sendFile("./pdfs/" + req.query.filename, {root: __dirname});
     else res.status(500);
   });
+  app.use('/api/chats', require('./api/chat'));
   app.use('/api/mails', require('./api/mail'));
   app.use('/api/reservations', require('./api/reservation'));
   app.use('/api/things', require('./api/thing'));

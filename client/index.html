@@ -27,6 +27,7 @@
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/main/main.css">
       <link rel="stylesheet" href="app/orphans/orphans.css">
+      <link rel="stylesheet" href="components/chat/chat.css">
       <link rel="stylesheet" href="components/footer/footer.css">
       <link rel="stylesheet" href="components/modal/modal.css">
       <!-- endinjector -->
@@ -85,6 +86,11 @@
       <!-- endbower -->
       <script src="bower_components/socket.io.js"></script>
     <!-- endbuild -->
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+      <script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script>
+      <script src="bower_components/HTML5-Desktop-Notifications2/desktop-notify.js"></script>
+      <script src="bower_components/angular-web-notification/angular-web-notification.js"></script>
+      <script src="bower_components/angular-emoji/dist/emoji.min.js"></script>
     <link rel="stylesheet" media="all" href="bower_components/bootstrap/dist/js/bootstrap.bundle.min.js" />
     <!-- build:js(.tmp) app/app.js -->
       <script src="app/app.js"></script>
@@ -92,7 +98,7 @@
       <script src="app/admin/admin.module.js"></script>
       <script src="components/auth/auth.module.js"></script>
       <script src="components/util/util.module.js"></script>
-      <script src="components/auth/auth.service.js"></script>
+      <script src="components/auth/interceptor.service.js"></script>
       <script src="app/admin/admin.controller.js"></script>
       <script src="app/account/account.js"></script>
       <script src="app/admin/admin.router.js"></script>
@@ -102,10 +108,12 @@
       <script src="app/orphans/orphans.controller.js"></script>
       <script src="app/orphans/orphans.js"></script>
       <script src="app/account/settings/settings.controller.js"></script>
+      <script src="components/auth/auth.service.js"></script>
       <script src="app/account/login/login.controller.js"></script>
-      <script src="components/auth/interceptor.service.js"></script>
       <script src="components/auth/router.decorator.js"></script>
       <script src="components/auth/user.service.js"></script>
+      <script src="components/chat/chat.controller.js"></script>
+      <script src="components/chat/chat.directive.js"></script>
       <script src="components/draggable/draggable.directive.js"></script>
       <script src="components/email/email.service.js"></script>
       <script src="components/footer/footer.directive.js"></script>

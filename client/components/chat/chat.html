@@ -1,0 +1,65 @@
+<div>
+  <button type="button" ng-class="classes" class="btn-autosize" ng-click="toggleVisible()">
+        Chat
+  </button>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" scroll-glue>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Chat</h4>
+        </div>
+        <div class="modal-body">
+          
+          <div ng-show="visible" class="row chat-window col-xs-12 col-md-12 {{theme}}" ng-class="{minimized: isHidden}">
+            <div class="col-xs-12 col-md-12">
+                <div class="panel">
+                    <div class="panel-heading chat-top-bar">
+                        <div class="col-md-8 col-xs-8">
+                            <h3 class="panel-title"><span class="fa fa-comment-o"></span> {{title}}</h3>
+                        </div>
+                        <div class="col-md-4 col-xs-4 window-actions" style="text-align: right;">
+                            <span class="fa" ng-class="chatButtonClass" ng-click="toggle()"></span>
+                            <span class="fa fa-close" ng-click="close()"></span>
+                        </div>
+                    </div>
+                    <div class="panel-body msg-container-base" ng-style="panelStyle">
+                        <div class="row msg-container" ng-repeat="message in messages" ng-init="selfAuthored = myUserId == message.fromUserId">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="chat-msg" ng-class="{'chat-msg-sent': selfAuthored, 'chat-msg-recieved': !selfAuthored}">
+                                    <span class="hide">myUserId:{{myUserId}}</span>
+                                    <img ng-if="message.imageUrl" class="profile" ng-class="{'pull-right': selfAuthored, 'pull-left': !selfAuthored}" ng-src="{{message.imageUrl}}" />
+                                    <div ng-bind-html="message.content|emoji"></div>
+                                    <div class="chat-msg-author">
+                                        <strong>{{message.username}}</strong>&nbsp;
+                                        <span class="date">{{message.date|date:'MM/dd/yyyy @ h:mma'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-footer chat-bottom-bar">
+                        <form style="display:inherit" >
+                            <div class="input-group" >
+                                
+                                <input type="text" class="form-control input-sm chat-input" placeholder="{{inputPlaceholderText}}" ng-model="writingMessage" />
+                                <span class="input-group-btn">
+                                    <input type="submit" class="btn btn-sm chat-submit-button" value="{{submitButtonText}}" ng-click="submitFunction()"/>
+                                </span>
+                            </div>
+                            <<!--<a href="http://www.emoji-cheat-sheet.com/" target="_blank">Emoji Cheat Sheet</a>-->
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+              
+        </div>    
+         
+        
+      </div>
+    </div>
+  </div>
+</div>
