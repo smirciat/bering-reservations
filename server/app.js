@@ -15,11 +15,11 @@ if (config.seedDB) { require('./config/seed'); }
 
 // Setup server
 var app = express();
-//var server = http.createServer(app);
-var server = require('https').createServer({
-  key: fs.readFileSync('./server/localhost.key'),
-  cert: fs.readFileSync('./server/localhost.crt')
-},app);
+var server = http.createServer(app);
+//var server = require('https').createServer({
+//  key: fs.readFileSync('./server/localhost.key'),
+//  cert: fs.readFileSync('./server/localhost.crt')
+//},app);
 
 var socketio = require('socket.io')(server, {
   serveClient: config.env !== 'production',
