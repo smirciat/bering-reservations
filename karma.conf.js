@@ -37,7 +37,7 @@ module.exports = function(config) {
       'client/bower_components/angular-touch/angular-touch.js',
       'client/bower_components/angularPrint/angularPrint.js',
       'client/bower_components/angular-scroll-glue/src/scrollglue.js',
-      'client/bower_components/HTML5-Desktop-Notifications2/desktop-notify.js',
+      'client/bower_components/simple-web-notification/web-notification.js',
       'client/bower_components/angular-web-notification/angular-web-notification.js',
       'client/bower_components/angular-emoji/dist/emoji.min.js',
       'client/bower_components/moment/moment.js',
