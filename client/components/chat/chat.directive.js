@@ -77,7 +77,7 @@ angular.module('workspaceApp')
                   //autoClose: 0 //auto close the notification after 10 seconds (you can manually close it via hide function)
               }, function onShow(error, hide) {
                   if (error) {
-                      window.alert('Unable to show notification: ' + error.message);
+                      //disable alert: window.alert('Unable to show notification: ' + error.message);
                   } else {
                       //console.log('Notification Shown.');
                         // The document is not on focus // so, let's handle this } else { // The document is on focus // do our things. } 
