@@ -18,7 +18,7 @@
             </ul>
             <input style="text-align:center" ng-if="nav.isRoute('')" type="date" ng-model="nav.currDate" ng-change="nav.upDate()" />
             <button class="btn btn-success" style="margin-left:15px; margin-right:15px;" ng-if="nav.isRoute('')" ng-click="main.manifest()">Manifest</button>
-            <chat ng-show="nav.isLoggedIn()"></chat>
+            <chat ng-if="nav.isLoggedIn()"></chat>
             <ul class="nav navbar-nav ml-auto">
                 <li ng-hide="nav.isLoggedIn()" ui-sref-active="active" class="nav-item"><a ng-click="nav.goto('signup')" class="nav-link">Sign up</a>
                 </li>
